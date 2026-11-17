@@ -26,6 +26,7 @@ from eeg_captioner.features.features.time_domain import build_time_domain_plugin
 from eeg_captioner.features.source_artifacts import YEO7_NETWORK_NAMES
 from eeg_captioner.features.segmentation import SegmentSpec, iter_equal_parts, iter_segments
 from eeg_captioner.features.io_tueg_h5 import (
+    SEIZURE_FRACTION_THRESHOLD,
     build_output_path,
     iter_trials,
     list_existing_feature_groups,
@@ -421,7 +422,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             seizure_overlap_sec: List[float] = []
             seizure_fraction: List[float] = []
             seizure_label: List[int] = []
-            seizure_annotation_available: List[bool] = []
             n_trials = len(input_meta.trial_ids)
             bad_segments_by_trial: List[List[bool]] = [[] for _ in range(n_trials)]
             n_segments_seen = 0
@@ -430,7 +430,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             seizure_overlap_by_trial: List[List[float]] = [[] for _ in range(n_trials)]
             seizure_fraction_by_trial: List[List[float]] = [[] for _ in range(n_trials)]
             seizure_label_by_trial: List[List[int]] = [[] for _ in range(n_trials)]
-            seizure_available_by_trial: List[List[bool]] = [[] for _ in range(n_trials)]
             segment_part_starts_by_trial: List[List[List[float]]] = [
                 [] for _ in range(n_trials)
             ]
@@ -497,7 +496,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     seg_seizure_overlap, seg_seizure_fraction, seg_seizure_label = (
                         seizure_segment_metadata(
                             input_meta.seizure_intervals_sec[trial_index],
-                            bool(input_meta.seizure_annotation_available[trial_index]),
                             start_sec,
                             seg_duration_sec,
                         )
@@ -537,9 +535,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                         seizure_overlap_by_trial[trial_index].append(seg_seizure_overlap)
                         seizure_fraction_by_trial[trial_index].append(seg_seizure_fraction)
                         seizure_label_by_trial[trial_index].append(seg_seizure_label)
-                        seizure_available_by_trial[trial_index].append(
-                            bool(input_meta.seizure_annotation_available[trial_index])
-                        )
                         bad_segments_by_trial[trial_index].append(bool(segment_rejected))
                         if segment_rejected:
                             # Keep timeline slot; leave part times as empty placeholders.
@@ -647,9 +642,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     seizure_overlap_sec.append(seg_seizure_overlap)
                     seizure_fraction.append(seg_seizure_fraction)
                     seizure_label.append(seg_seizure_label)
-                    seizure_annotation_available.append(
-                        bool(input_meta.seizure_annotation_available[trial_index])
-                    )
                     if run_bad_channel:
                         bad_channel_masks.append(
                             np.asarray(trial_mask, dtype=bool)
@@ -682,7 +674,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             seizure_overlap_array = None
             seizure_fraction_array = None
             seizure_label_array = None
-            seizure_available_array = None
             output_trial_ids = unit_ids
             output_source_paths = unit_source_paths
             if use_segment_parts:
@@ -706,10 +697,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     (n_trials, max_segments), np.nan, dtype=np.float32
                 )
                 seizure_label_array = np.full(
-                    (n_trials, max_segments), -1, dtype=np.int8
-                )
-                seizure_available_array = np.zeros(
-                    (n_trials, max_segments), dtype=bool
+                    (n_trials, max_segments), 0, dtype=np.int8
                 )
                 for trial_i, starts in enumerate(segment_starts_by_trial):
                     n_segments = len(starts)
@@ -726,9 +714,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     )
                     seizure_label_array[trial_i, :n_segments] = np.asarray(
                         seizure_label_by_trial[trial_i], dtype=np.int8
-                    )
-                    seizure_available_array[trial_i, :n_segments] = np.asarray(
-                        seizure_available_by_trial[trial_i], dtype=bool
                     )
                     bad_flags = np.asarray(
                         bad_segments_by_trial[trial_i][:n_segments], dtype=bool
@@ -771,9 +756,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 seizure_overlap_array = np.asarray(seizure_overlap_sec, dtype=np.float32)
                 seizure_fraction_array = np.asarray(seizure_fraction, dtype=np.float32)
                 seizure_label_array = np.asarray(seizure_label, dtype=np.int8)
-                seizure_available_array = np.asarray(
-                    seizure_annotation_available, dtype=bool
-                )
                 feature_groups = _stack_accumulator(accumulator)
                 _run_sanity_checks(feature_groups, warnings)
             bad_channel_mask_array = None
@@ -795,9 +777,10 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 "source_file": basename,
                 "source_input_path": input_path,
                 "sample_rate_hz": float(input_meta.sample_rate),
+                "seizure_fraction_threshold": SEIZURE_FRACTION_THRESHOLD,
                 "seizure_label_policy": (
-                    "1=any overlap with TUSZ seizure interval; "
-                    "0=annotated with no overlap; -1=annotation unavailable"
+                    f"1=seizure overlap fraction >= {SEIZURE_FRACTION_THRESHOLD}; "
+                    f"0=seizure overlap fraction < {SEIZURE_FRACTION_THRESHOLD}"
                 ),
             }
             if segment_spec:
@@ -905,7 +888,6 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     seizure_overlap_sec=seizure_overlap_array,
                     seizure_fraction=seizure_fraction_array,
                     seizure_label=seizure_label_array,
-                    seizure_annotation_available=seizure_available_array,
                     append=append_mode,
                 )
                 if atomic_new_write:

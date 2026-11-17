@@ -28,7 +28,6 @@ def make_h5(path, trials=1, sample_rate=200, seizure_intervals=None):
                     padded[trial_index, :len(intervals)] = intervals
             f["seizure_interval_count"] = counts
             f["seizure_intervals_sec"] = padded
-            f["seizure_annotation_available"] = np.ones(trials, dtype=bool)
 
 
 def test_preprocess_filters_units_and_h5(tmp_path, monkeypatch):
@@ -57,35 +56,42 @@ def test_preprocess_filters_units_and_h5(tmp_path, monkeypatch):
         assert bool(f.attrs["has_labels"])
         assert f["seizure_interval_count"][:].tolist() == [1]
         np.testing.assert_allclose(f["seizure_intervals_sec"][0, 0], [3.0, 12.0])
-        assert f["seizure_annotation_available"][:].tolist() == [True]
 
 
-def test_missing_tusz_annotation_is_unknown(tmp_path):
+def test_missing_tusz_annotation_is_an_error(tmp_path):
     from eeg_captioner.preprocessing.tueg import read_tusz_seizure_annotation
 
-    result = read_tusz_seizure_annotation(str(tmp_path / "recording.edf"))
-    assert result["available"] is False
-    assert result["intervals_sec"].shape == (0, 2)
+    with pytest.raises(FileNotFoundError, match="Missing required TUSZ annotation"):
+        read_tusz_seizure_annotation(str(tmp_path / "recording.edf"))
+
+
+def test_feature_input_without_tusz_annotation_is_an_error(tmp_path):
+    from eeg_captioner.features.io_tueg_h5 import read_input_meta
+
+    path = tmp_path / "missing_annotation.h5"
+    make_h5(path)
+    with pytest.raises(ValueError, match="Missing required TUSZ annotation metadata"):
+        read_input_meta(str(path))
 
 
 @pytest.mark.parametrize(
-    ("available", "start", "duration", "expected"),
+    ("intervals", "start", "duration", "expected"),
     [
-        (True, 0.0, 10.0, (5.0, 0.5, 1)),
-        (True, 15.0, 10.0, (0.0, 0.0, 0)),
-        (False, 0.0, 10.0, (np.nan, np.nan, -1)),
+        ([[5.0, 15.0]], 0.0, 10.0, (5.0, 0.5, 1)),
+        ([[0.0, 1.5]], 0.0, 10.0, (1.5, 0.15, 1)),
+        ([[0.0, 1.49]], 0.0, 10.0, (1.49, 0.149, 0)),
+        ([[5.0, 15.0]], 15.0, 10.0, (0.0, 0.0, 0)),
     ],
 )
-def test_seizure_segment_metadata_boundaries(available, start, duration, expected):
+def test_seizure_segment_metadata_boundaries(intervals, start, duration, expected):
     from eeg_captioner.features.io_tueg_h5 import seizure_segment_metadata
 
     actual = seizure_segment_metadata(
-        np.asarray([[5.0, 15.0]], dtype=np.float32), available, start, duration
+        np.asarray(intervals, dtype=np.float32), start, duration
     )
-    if available:
-        assert actual == expected
-    else:
-        assert np.isnan(actual[0]) and np.isnan(actual[1]) and actual[2] == -1
+    assert actual[0] == pytest.approx(expected[0])
+    assert actual[1] == pytest.approx(expected[1])
+    assert actual[2] == expected[2]
 
 
 @pytest.mark.parametrize("archived", [False, True])
@@ -96,7 +102,7 @@ def test_features_summary_manifest(tmp_path, archived):
     from eeg_captioner.data.dataset import load_manifest, load_eeg
     raw = tmp_path / "processed"; raw.mkdir()
     for i in range(3):
-        intervals = [[(2.0, 7.0)]] if i == 0 else ([[]] if i == 1 else None)
+        intervals = [[(2.0, 7.0)]] if i == 0 else [[]]
         make_h5(raw / f"s{i}.h5", seizure_intervals=intervals)
     config = yaml.safe_load((Path(__file__).parents[1] / "configs/features.yaml").read_text())
     config["input_root"] = str(raw); config["output_root"] = str(tmp_path / "features")
@@ -106,12 +112,11 @@ def test_features_summary_manifest(tmp_path, archived):
         assert f["meta/seizure_label"][:].tolist() == [[1]]
         np.testing.assert_allclose(f["meta/seizure_overlap_sec"][:], [[5.0]])
         np.testing.assert_allclose(f["meta/seizure_fraction"][:], [[0.5]])
-        assert f["meta/seizure_annotation_available"][:].tolist() == [[True]]
     with h5py.File(tmp_path / "features/s1.h5", "r") as f:
         assert f["meta/seizure_label"][:].tolist() == [[0]]
     with h5py.File(tmp_path / "features/s2.h5", "r") as f:
-        assert f["meta/seizure_label"][:].tolist() == [[-1]]
-        assert np.isnan(f["meta/seizure_fraction"][:]).all()
+        assert f["meta/seizure_label"][:].tolist() == [[0]]
+        np.testing.assert_allclose(f["meta/seizure_fraction"][:], [[0.0]])
     main(["summaries", "--input-glob", str(tmp_path / "features/*.h5"), "--output-dir", str(tmp_path / "summaries")])
     from eeg_captioner.data.summaries import segment_summaries
     summaries = list(segment_summaries(tmp_path / "summaries"))

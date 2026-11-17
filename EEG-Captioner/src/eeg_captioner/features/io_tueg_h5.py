@@ -12,6 +12,9 @@ import h5py
 import numpy as np
 
 
+SEIZURE_FRACTION_THRESHOLD = 0.15
+
+
 @dataclass
 class InputMeta:
     input_path: str
@@ -23,7 +26,6 @@ class InputMeta:
     trial_ids: List[str]
     source_paths: List[str]
     seizure_intervals_sec: List[np.ndarray]
-    seizure_annotation_available: np.ndarray
 
 
 def list_input_h5_files(input_root: str, max_files: int | None = None) -> List[str]:
@@ -81,28 +83,34 @@ def read_input_meta(input_path: str, use_labram_channels: bool = True) -> InputM
         else:
             source_paths = ["" for _ in range(n_trials)]
 
-        seizure_annotation_available = np.zeros(n_trials, dtype=bool)
         seizure_intervals_sec = [np.empty((0, 2), dtype=np.float32) for _ in range(n_trials)]
-        if "seizure_annotation_available" in f:
-            available = np.asarray(f["seizure_annotation_available"][:], dtype=bool)
-            seizure_annotation_available[: min(n_trials, len(available))] = available[:n_trials]
-        if "seizure_intervals_sec" in f and "seizure_interval_count" in f:
-            padded = np.asarray(f["seizure_intervals_sec"][:], dtype=np.float32)
-            counts = np.asarray(f["seizure_interval_count"][:], dtype=np.int32)
-            for trial_index in range(min(n_trials, len(counts), padded.shape[0])):
-                count = int(counts[trial_index])
-                if count < 0 or count > padded.shape[1]:
-                    raise ValueError(
-                        f"Invalid seizure_interval_count for trial {trial_index}: {count}"
-                    )
-                intervals = np.asarray(padded[trial_index, :count], dtype=np.float32)
-                if intervals.size and (
-                    not np.isfinite(intervals).all()
-                    or (intervals[:, 0] < 0).any()
-                    or (intervals[:, 1] <= intervals[:, 0]).any()
-                ):
-                    raise ValueError(f"Invalid seizure intervals for trial {trial_index}")
-                seizure_intervals_sec[trial_index] = intervals.reshape(-1, 2)
+        required_annotation_fields = {"seizure_intervals_sec", "seizure_interval_count"}
+        missing_annotation_fields = required_annotation_fields.difference(f.keys())
+        if missing_annotation_fields:
+            raise ValueError(
+                f"Missing required TUSZ annotation metadata in {input_path}: "
+                f"{sorted(missing_annotation_fields)}"
+            )
+        padded = np.asarray(f["seizure_intervals_sec"][:], dtype=np.float32)
+        counts = np.asarray(f["seizure_interval_count"][:], dtype=np.int32)
+        if len(counts) != n_trials or padded.shape[0] != n_trials:
+            raise ValueError(
+                f"TUSZ annotation trial count does not match data in {input_path}"
+            )
+        for trial_index in range(n_trials):
+            count = int(counts[trial_index])
+            if count < 0 or count > padded.shape[1]:
+                raise ValueError(
+                    f"Invalid seizure_interval_count for trial {trial_index}: {count}"
+                )
+            intervals = np.asarray(padded[trial_index, :count], dtype=np.float32)
+            if intervals.size and (
+                not np.isfinite(intervals).all()
+                or (intervals[:, 0] < 0).any()
+                or (intervals[:, 1] <= intervals[:, 0]).any()
+            ):
+                raise ValueError(f"Invalid seizure intervals for trial {trial_index}")
+            seizure_intervals_sec[trial_index] = intervals.reshape(-1, 2)
 
     if len(trial_ids) < n_trials:
         trial_ids.extend(f"trial_{i}" for i in range(len(trial_ids), n_trials))
@@ -119,26 +127,22 @@ def read_input_meta(input_path: str, use_labram_channels: bool = True) -> InputM
         trial_ids=trial_ids[:n_trials],
         source_paths=source_paths[:n_trials],
         seizure_intervals_sec=seizure_intervals_sec,
-        seizure_annotation_available=seizure_annotation_available,
     )
 
 
 def seizure_segment_metadata(
     intervals_sec: np.ndarray,
-    annotation_available: bool,
     start_sec: float,
     duration_sec: float,
 ) -> Tuple[float, float, int]:
-    """Return (overlap seconds, overlap fraction, binary/unknown label)."""
-    if not annotation_available:
-        return float("nan"), float("nan"), -1
+    """Return overlap seconds, overlap fraction, and a binary seizure label."""
     stop_sec = start_sec + duration_sec
     overlap_sec = 0.0
     for interval_start, interval_stop in np.asarray(intervals_sec).reshape(-1, 2):
         overlap_sec += max(0.0, min(stop_sec, float(interval_stop)) - max(start_sec, float(interval_start)))
     overlap_sec = min(max(overlap_sec, 0.0), max(duration_sec, 0.0))
     fraction = overlap_sec / duration_sec if duration_sec > 0 else 0.0
-    return overlap_sec, fraction, int(overlap_sec > 0.0)
+    return overlap_sec, fraction, int(fraction >= SEIZURE_FRACTION_THRESHOLD)
 
 
 def iter_trials(input_meta: InputMeta) -> Iterator[Tuple[int, np.ndarray, int]]:
@@ -245,7 +249,6 @@ def write_feature_h5(
     seizure_overlap_sec: np.ndarray | None = None,
     seizure_fraction: np.ndarray | None = None,
     seizure_label: np.ndarray | None = None,
-    seizure_annotation_available: np.ndarray | None = None,
     append: bool = False,
 ) -> None:
     """Write one mirrored output H5 with grouped feature arrays."""
@@ -341,7 +344,6 @@ def write_feature_h5(
             ("seizure_overlap_sec", seizure_overlap_sec, np.float32),
             ("seizure_fraction", seizure_fraction, np.float32),
             ("seizure_label", seizure_label, np.int8),
-            ("seizure_annotation_available", seizure_annotation_available, np.bool_),
         )
         for name, values, dtype in seizure_fields:
             if values is not None and name not in meta:

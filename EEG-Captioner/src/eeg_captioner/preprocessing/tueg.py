@@ -73,16 +73,15 @@ def read_tusz_seizure_annotation(edf_path: str) -> dict:
     """Read the sibling TUSZ ``.csv_bi`` file for one EDF recording.
 
     A valid annotation containing only ``bckg`` rows is still available and
-    represents a recording with no seizure intervals. Missing annotations are
-    retained as unknown so generic TUEG inputs remain supported.
+    represents a recording with no seizure intervals. Every EDF is required to
+    have an annotation because this preprocessing pipeline produces binary
+    TUSZ seizure labels only.
     """
     annotation_path = str(Path(edf_path).with_suffix(".csv_bi"))
     if not os.path.isfile(annotation_path):
-        return {
-            "available": False,
-            "intervals_sec": np.empty((0, 2), dtype=np.float32),
-            "annotation_path": "",
-        }
+        raise FileNotFoundError(
+            f"Missing required TUSZ annotation for {edf_path}: {annotation_path}"
+        )
 
     intervals: list[tuple[float, float]] = []
     with open(annotation_path, "r", encoding="utf-8-sig", newline="") as handle:
@@ -107,7 +106,6 @@ def read_tusz_seizure_annotation(edf_path: str) -> dict:
             intervals.append((start, stop))
 
     return {
-        "available": True,
         "intervals_sec": merge_intervals(intervals),
         "annotation_path": _relative_source_path(annotation_path),
     }
@@ -169,23 +167,24 @@ def process_group(edf_files: list[str], output_path: str, subject_id: str, chann
     source_paths = []
     trial_ids = []
     seizure_intervals = []
-    seizure_annotation_available = []
     seizure_annotation_paths = []
 
     for edf_path in sorted_files:
+        # Annotation errors are fatal. Silently skipping an unlabelled EDF
+        # would change the dataset and could make missing labels look like
+        # background recordings.
+        annotation = read_tusz_seizure_annotation(edf_path)
         try:
             result = process_single_edf(edf_path, channel_order)
             if result["error"]:
                 errors.append({"file": edf_path, "error": result["error"]})
                 continue
-            annotation = read_tusz_seizure_annotation(edf_path)
             valid_files.append(edf_path)
             trial_lengths.append(result["n_samples"])
             original_sfreqs.append(result["original_sfreq"])
             source_paths.append(result["source_path"])
             trial_ids.append(result["trial_id"])
             seizure_intervals.append(annotation["intervals_sec"])
-            seizure_annotation_available.append(annotation["available"])
             seizure_annotation_paths.append(annotation["annotation_path"])
         except Exception as e:
             errors.append({"file": edf_path, "error": str(e), "traceback": traceback.format_exc()})
@@ -245,10 +244,6 @@ def process_group(edf_files: list[str], output_path: str, subject_id: str, chann
         f.create_dataset("seizure_interval_count", data=interval_counts)
         f.create_dataset("seizure_intervals_sec", data=padded_intervals)
         f.create_dataset(
-            "seizure_annotation_available",
-            data=np.asarray(seizure_annotation_available, dtype=np.bool_),
-        )
-        f.create_dataset(
             "seizure_annotation_paths",
             data=np.asarray(seizure_annotation_paths, dtype="S"),
         )
@@ -263,8 +258,8 @@ def process_group(edf_files: list[str], output_path: str, subject_id: str, chann
 
         f.attrs["sample_rate"] = TARGET_SRATE
         f.attrs["trial_count"] = n_trials
-        f.attrs["has_labels"] = bool(any(seizure_annotation_available))
-        f.attrs["all_trials_have_labels"] = bool(all(seizure_annotation_available))
+        f.attrs["has_labels"] = True
+        f.attrs["all_trials_have_labels"] = True
         f.attrs["seizure_label_source"] = "TUSZ csv_bi"
         f.attrs["subject_id_original"] = subject_id
         f.attrs["channel_signature"] = channel_signature

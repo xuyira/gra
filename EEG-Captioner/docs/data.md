@@ -21,10 +21,10 @@ the original EDFs available when diagnosing a failed recording.
   this does not imply a dependency on the LaBraM repository.
 - For TUSZ inputs, the sibling `.csv_bi` annotation is retained as
   `seizure_intervals_sec` (`[trial,max_events,2]`, seconds),
-  `seizure_interval_count`, `seizure_annotation_available`, and
-  `seizure_annotation_paths`. Overlapping seizure rows are merged. A valid
-  annotation containing only `bckg` rows has zero intervals; a missing
-  annotation remains unknown rather than being treated as background.
+  `seizure_interval_count`, and `seizure_annotation_paths`. Overlapping
+  seizure rows are merged. A valid annotation containing only `bckg` rows has
+  zero intervals. Every EDF must have a sibling `.csv_bi`; preprocessing fails
+  immediately when the annotation is missing.
 
 Feature extraction retains the original quality control: reference channels
 marked bad, 500 µV peak/1 µV flat criteria, trial rejection thresholds, and
@@ -33,11 +33,10 @@ It extracts 10-second non-overlapping segments and divides each into
 `[0:666]`, `[666:1333]`, `[1333:2000]`. Feature plugins cover band powers,
 time-domain statistics, spectral properties, spatial asymmetry and source networks.
 The feature H5 also stores segment-aligned `meta/seizure_label`
-(`1` for any seizure overlap, `0` for annotated background, `-1` when the
-annotation is unavailable), `meta/seizure_overlap_sec`,
-`meta/seizure_fraction`, and `meta/seizure_annotation_available`. The overlap
-fraction supports applying a stricter downstream threshold without rerunning
-EDF preprocessing.
+(`1` when seizure overlap covers at least 15% of the segment and `0`
+otherwise), `meta/seizure_overlap_sec`, and `meta/seizure_fraction`. For a
+10-second segment the positive threshold is therefore 1.5 seconds. Labels are
+strictly binary; missing annotations are errors rather than a third label.
 
 The encoder's fixed Welch frontend uses 666-sample Hann windows at 200 Hz over
 the same thirds, selecting 0.5–45 Hz bins. The model reads 20 channels in order:
