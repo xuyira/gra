@@ -26,6 +26,7 @@ class InputMeta:
     trial_ids: List[str]
     source_paths: List[str]
     seizure_intervals_sec: List[np.ndarray]
+    presegmented_10s: bool
 
 
 def list_input_h5_files(input_root: str, max_files: int | None = None) -> List[str]:
@@ -64,6 +65,7 @@ def read_input_meta(input_path: str, use_labram_channels: bool = True) -> InputM
         trial_lengths = np.asarray(f["trial_lengths_in_samples"][:], dtype=np.int32)
         n_trials = int(f["data"].shape[0])
         sample_rate = float(f.attrs.get("sample_rate", 200.0))
+        presegmented_10s = bool(f.attrs.get("presegmented_10s", False))
 
         if use_labram_channels and "labram_channel_indices" in f:
             eeg_indices = np.asarray(f["labram_channel_indices"][:], dtype=np.int32)
@@ -127,6 +129,7 @@ def read_input_meta(input_path: str, use_labram_channels: bool = True) -> InputM
         trial_ids=trial_ids[:n_trials],
         source_paths=source_paths[:n_trials],
         seizure_intervals_sec=seizure_intervals_sec,
+        presegmented_10s=presegmented_10s,
     )
 
 

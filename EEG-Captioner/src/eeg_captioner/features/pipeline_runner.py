@@ -270,6 +270,11 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
 
     bad_channel_cfg = config.get("bad_channel", {}) or {}
     bad_channel_enabled = bool(bad_channel_cfg.get("enabled", False))
+    bad_trial_policy = str(
+        bad_channel_cfg.get("bad_trial_policy", "reject")
+    ).strip().lower()
+    if bad_trial_policy not in {"mark", "reject"}:
+        raise ValueError("bad_channel.bad_trial_policy must be 'mark' or 'reject'")
     segment_reject_cfg = dict(bad_channel_cfg.get("segment_reject") or {})
     segment_reject_enabled = bool(segment_reject_cfg.get("enabled", False))
     hard_peak_threshold_uv = float(segment_reject_cfg.get("hard_peak_threshold_uv", 100.0))
@@ -507,7 +512,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
 
                     segment_rejected = False
                     reject_reason = ""
-                    if trial_bad:
+                    if trial_bad and bad_trial_policy == "reject":
                         segment_rejected = True
                         reject_reason = (
                             f"parent_trial_bad"
@@ -782,6 +787,8 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     f"1=seizure overlap fraction >= {SEIZURE_FRACTION_THRESHOLD}; "
                     f"0=seizure overlap fraction < {SEIZURE_FRACTION_THRESHOLD}"
                 ),
+                "bad_trial_policy": bad_trial_policy,
+                "source_presegmented_10s": input_meta.presegmented_10s,
             }
             if segment_spec:
                 attrs["segmentation_json"] = {
@@ -799,7 +806,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 attrs["welch_params_json"] = {
                     "window_sec": bandpower_cfg.get("welch_window_sec", 4.0),
                     "overlap": bandpower_cfg.get("welch_overlap", 0.5),
-                    "analysis_range": bandpower_cfg.get("analysis_range", [0.5, 45.0]),
+                    "analysis_range": bandpower_cfg.get("analysis_range", [1.6, 45.0]),
                 }
             if not append_mode:
                 attrs["bad_channel_json"] = bad_channel_cfg

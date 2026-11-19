@@ -32,11 +32,35 @@ def prepare(processed, summaries, captions, output, bin_consistency=True, seed=4
         if raw not in metadata:
             with h5py.File(raw, "r") as f:
                 decode = lambda v: v.decode() if isinstance(v, bytes) else str(v)
-                metadata[raw] = ([decode(v) for v in f["trial_ids"][:]], {decode(v).upper() for v in f["channels"][:]})
-        trials, channels = metadata[raw]
+                trials = [decode(v) for v in f["trial_ids"][:]]
+                segment_rows = (
+                    {decode(v): i for i, v in enumerate(f["segment_ids"][:])}
+                    if bool(f.attrs.get("presegmented_10s", False))
+                    and "segment_ids" in f
+                    else None
+                )
+                metadata[raw] = (
+                    trials,
+                    {decode(v).upper() for v in f["channels"][:]},
+                    segment_rows,
+                )
+        trials, channels, segment_rows = metadata[raw]
         if not (set(MODEL_CHANNELS) - {"OZ"}).issubset(channels):
             rejected["missing_channel"] += 1
             continue
+        if segment_rows is not None:
+            segment_key = f"{trial_id}__seg{int(segment):04d}"
+            if segment_key not in segment_rows:
+                rejected["missing_segment"] += 1
+                continue
+            trial_index = segment_rows[segment_key]
+            start_sample = 0
+        else:
+            if trial_id not in trials:
+                rejected["missing_trial"] += 1
+                continue
+            trial_index = trials.index(trial_id)
+            start_sample = int(segment) * 2000
         features = parse_summary_features(p)
         labels = []
         for h, q in enumerate(questions):
@@ -55,7 +79,7 @@ def prepare(processed, summaries, captions, output, bin_consistency=True, seed=4
             continue
         rows.append({"id": p.stem, "eeg_path": os.path.relpath(raw.resolve(), output.parent.resolve()),
                      "summary_path": os.path.relpath(p.resolve(), output.parent.resolve()),
-                     "trial_index": trials.index(trial_id), "start_sample": int(segment) * 2000,
+                     "trial_index": trial_index, "start_sample": start_sample,
                      "caption": caption, "labels": labels})
     if not rows:
         raise ValueError("No matched EEG/summary/caption samples")

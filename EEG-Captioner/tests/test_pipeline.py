@@ -5,6 +5,7 @@ import h5py
 import pytest
 import torch
 import yaml
+from eeg_captioner.channels import STANDARD_19_CHANNELS
 from eeg_captioner.data.rules import MODEL_CHANNELS
 from eeg_captioner.io import write_jsonl, read_jsonl
 
@@ -47,15 +48,52 @@ def test_preprocess_filters_units_and_h5(tmp_path, monkeypatch):
         "TERM,3.0,7.0,seiz,1.0\n"
         "TERM,6.0,12.0,seiz,1.0\n"
     )
-    result = tueg.process_group([str(edf_path)], str(tmp_path / "test.h5"), "s", list(MODEL_CHANNELS))
+    result = tueg.process_group(
+        [str(edf_path)],
+        str(tmp_path / "test.h5"),
+        "s",
+        list(STANDARD_19_CHANNELS),
+    )
     assert result["status"] == "ok" and not result["errors"]
     with h5py.File(tmp_path / "test.h5", "r") as f:
         assert f.attrs["sample_rate"] == 200
-        assert f["data"].shape == (1, 20, 3200)
+        assert f["data"].shape == (1, 19, 2000)
+        assert [v.decode() for v in f["channels"][:]] == list(STANDARD_19_CHANNELS)
+        assert [v.decode() for v in f["segment_ids"][:]] == ["synthetic__seg0000"]
+        assert f["segment_start_samples"][:].tolist() == [0]
+        assert int(f.attrs["dropped_tail_samples_total"]) == 1200
+        assert bool(f.attrs["presegmented_10s"])
+        assert f.attrs["reference_scheme"] == "average"
+        assert int(f.attrs["reference_channel_count"]) == 19
+        np.testing.assert_allclose(
+            f["data"][0].mean(axis=0), 0.0, atol=1e-5
+        )
         assert 0.1 < float(f["data"][:].std()) < 10
         assert bool(f.attrs["has_labels"])
         assert f["seizure_interval_count"][:].tolist() == [1]
-        np.testing.assert_allclose(f["seizure_intervals_sec"][0, 0], [3.0, 12.0])
+        np.testing.assert_allclose(f["seizure_intervals_sec"][0, 0], [3.0, 10.0])
+        np.testing.assert_allclose(f["seizure_overlap_sec"][:], [7.0])
+        np.testing.assert_allclose(f["seizure_fraction"][:], [0.7])
+        assert f["seizure_label"][:].tolist() == [1]
+
+    from eeg_captioner.data.dataset import load_eeg
+    from eeg_captioner.data.segment_store import load_shared_segment
+
+    shared = load_shared_segment(tmp_path / "test.h5", segment_id="synthetic__seg0000")
+    assert shared.signal_uv.shape == (19, 2000)
+    assert shared.parent_trial_id == "synthetic"
+    assert shared.seizure_label == 1
+    model_input = load_eeg(
+        {"eeg_path": str(tmp_path / "test.h5"), "trial_index": 0, "start_sample": 0}
+    )
+    assert tuple(model_input.shape) == (20, 10, 200)
+    np.testing.assert_allclose(
+        model_input[:10].numpy().reshape(10, 2000), shared.signal_uv[:10] / 100.0
+    )
+    assert model_input[10].eq(0).all()
+    np.testing.assert_allclose(
+        model_input[11:].numpy().reshape(9, 2000), shared.signal_uv[10:] / 100.0
+    )
 
 
 def test_missing_tusz_annotation_is_an_error(tmp_path):
@@ -121,6 +159,15 @@ def test_features_summary_manifest(tmp_path, archived):
     from eeg_captioner.data.summaries import segment_summaries
     summaries = list(segment_summaries(tmp_path / "summaries"))
     assert len(summaries) == 3
+    from eeg_captioner.data.rule_qa import export_rule_qa
+    qa_path = tmp_path / "rule_qa.jsonl"
+    qa_metadata = export_rule_qa(raw, tmp_path / "summaries", qa_path)
+    qa_rows = read_jsonl(qa_path)
+    assert qa_metadata["segments_seen"] == 3
+    assert qa_metadata["qa_examples"] == len(qa_rows) > 0
+    assert all(row["annotation_source"] == "eeg_captioner_rule" for row in qa_rows)
+    assert all(row["answer_label"] in row["options"] for row in qa_rows)
+    assert all(row["answer_index"] == row["options"].index(row["answer_label"]) for row in qa_rows)
     captions = tmp_path / "captions"; captions.mkdir()
     batch = captions / "batch"; batch.mkdir()
     for p in summaries:

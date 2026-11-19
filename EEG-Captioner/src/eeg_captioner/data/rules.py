@@ -3,6 +3,8 @@ import re
 import random
 from collections import defaultdict
 
+from eeg_captioner.channels import EEG_CAPTIONER_MODEL_CHANNELS
+
 PERIODS = ("early", "middle", "last")
 
 
@@ -16,7 +18,7 @@ ROI_CHANNELS = {
     "frontal": ("FP1", "FP2", "F3", "F4", "F7", "F8", "FZ"),
     "central": ("C3", "C4", "CZ"),
     "parietal": ("P3", "P4", "PZ"),
-    "occipital": ("O1", "O2", "OZ"),
+    "occipital": ("O1", "O2"),
     "temporal": ("T3", "T4", "T5", "T6"),
 }
 
@@ -40,10 +42,7 @@ TYPE_OPTIONS = {
 PART_RE = re.compile(r"^# \*\*Part [123]: (Early|Middle|Last) Feature Values\*\*$")
 
 
-MODEL_CHANNELS = (
-    "FP1", "FP2", "F3", "F4", "C3", "C4", "P3", "P4", "O1", "O2",
-    "OZ", "F7", "F8", "T3", "T4", "T5", "T6", "FZ", "CZ", "PZ",
-)
+MODEL_CHANNELS = EEG_CAPTIONER_MODEL_CHANNELS
 
 
 def split_filenames(samples, train_ratio=0.8, val_ratio=0.1, seed=42):

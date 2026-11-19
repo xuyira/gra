@@ -8,8 +8,15 @@ from pathlib import Path
 import h5py
 import mne
 import numpy as np
-L_FREQ, H_FREQ, NOTCH_FREQ, TARGET_SRATE = 0.1, 75.0, 50.0, 200.0
-CHUNK_TIME, GZIP_LEVEL = 2048, 4
+
+from eeg_captioner.channels import STANDARD_19_CHANNELS
+
+L_FREQ, H_FREQ, NOTCH_FREQ, TARGET_SRATE = 1.6, 70.0, 60.0, 200.0
+REFERENCE_SCHEME = "average"
+GZIP_LEVEL = 4
+SEGMENT_DURATION_SEC = 10.0
+SEGMENT_SAMPLES = int(TARGET_SRATE * SEGMENT_DURATION_SEC)
+SEIZURE_FRACTION_THRESHOLD = 0.15
 
 STANDARD_1020 = [
     'FP1', 'FPZ', 'FP2',
@@ -110,6 +117,7 @@ def read_tusz_seizure_annotation(edf_path: str) -> dict:
         "annotation_path": _relative_source_path(annotation_path),
     }
 
+
 def process_single_edf(edf_path: str, channel_order: list[str]) -> dict:
     """处理单个 EDF 文件，返回处理后的数据和元信息。"""
     raw = mne.io.read_raw_edf(edf_path, preload=True, verbose=False)
@@ -128,16 +136,22 @@ def process_single_edf(edf_path: str, channel_order: list[str]) -> dict:
     if raw.info["sfreq"] != TARGET_SRATE:
         raw.resample(TARGET_SRATE, verbose=False)
 
-    # MNE 内部单位是伏特，乘 1e6 得到 µV
-    data = raw.get_data() * 1e6  # shape: (n_channels, n_samples)
-
-    # 按 channel_order 重排通道
+    # Select the fixed standard-19 montage before re-referencing. Averaging all
+    # EDF EEG rows would incorrectly include auxiliary/reference channels such
+    # as A1/A2, T1/T2, or OZ when they are present.
+    data_volts = raw.get_data()
     raw_canonical = {canonicalize_channel_name(ch): i for i, ch in enumerate(raw.ch_names)}
-    reordered = np.zeros((len(channel_order), data.shape[1]), dtype=np.float32)
-    for target_idx, ch_name in enumerate(channel_order):
-        source_idx = raw_canonical.get(ch_name)
-        if source_idx is not None:
-            reordered[target_idx] = data[source_idx]
+    missing_channels = [name for name in channel_order if name not in raw_canonical]
+    if missing_channels:
+        raise ValueError(
+            f"Missing required standard-19 channels in {edf_path}: {missing_channels}"
+        )
+    source_indices = [raw_canonical[ch_name] for ch_name in channel_order]
+    referenced_volts = data_volts[source_indices]
+    referenced_volts -= referenced_volts.mean(axis=0, keepdims=True)
+
+    # MNE stores volts internally; the shared H5 contract is microvolts.
+    reordered = (referenced_volts * 1e6).astype(np.float32, copy=False)
 
     n_samples = reordered.shape[1]
     rel_path = _relative_source_path(edf_path)
@@ -152,95 +166,207 @@ def process_single_edf(edf_path: str, channel_order: list[str]) -> dict:
         "error": None,
     }
 
-def process_group(edf_files: list[str], output_path: str, subject_id: str, channel_order: list[str]) -> dict:
+
+def _segment_annotation(
+    intervals_sec: np.ndarray,
+    start_sec: float,
+    duration_sec: float = SEGMENT_DURATION_SEC,
+) -> tuple[np.ndarray, float, float, int]:
+    """Clip absolute seizure intervals to one window and make them window-local."""
+    stop_sec = start_sec + duration_sec
+    local_intervals = []
+    for interval_start, interval_stop in np.asarray(intervals_sec).reshape(-1, 2):
+        overlap_start = max(start_sec, float(interval_start))
+        overlap_stop = min(stop_sec, float(interval_stop))
+        if overlap_stop > overlap_start:
+            local_intervals.append(
+                (overlap_start - start_sec, overlap_stop - start_sec)
+            )
+    local = merge_intervals(local_intervals)
+    overlap_sec = float(np.sum(local[:, 1] - local[:, 0])) if len(local) else 0.0
+    fraction = overlap_sec / duration_sec
+    label = int(fraction >= SEIZURE_FRACTION_THRESHOLD)
+    return local, overlap_sec, fraction, label
+
+
+def process_group(
+    edf_files: list[str],
+    output_path: str,
+    subject_id: str,
+    channel_order: list[str],
+) -> dict:
+    """Write the shared fixed-standard-19, non-overlapping 10-second store.
+
+    Each H5 row is the authoritative signal window consumed by both
+    EEG-Captioner and CerebraGloss. Incomplete tails are recorded and dropped,
+    never padded into training samples. Two passes keep peak memory bounded to
+    one EDF recording.
     """
-    处理同一通道配置的所有 EDF，输出为一个 H5 文件。
-    两遍处理：第一遍收集元信息和长度，第二遍逐 trial 写入 H5，避免内存爆炸。
-    """
-    sorted_files = sorted(edf_files)
+    if tuple(channel_order) != STANDARD_19_CHANNELS:
+        raise ValueError(
+            "Preprocessing channel_order must be the fixed CerebraGloss standard-19 order"
+        )
+
     errors = []
-
-    # === 第一遍：只收集元信息（不保留 data 在内存中） ===
     valid_files = []
-    trial_lengths = []
-    original_sfreqs = []
-    source_paths = []
-    trial_ids = []
-    seizure_intervals = []
-    seizure_annotation_paths = []
+    source_records = []
+    dropped_tail_samples = []
 
-    for edf_path in sorted_files:
-        # Annotation errors are fatal. Silently skipping an unlabelled EDF
-        # would change the dataset and could make missing labels look like
-        # background recordings.
+    for edf_path in sorted(edf_files):
+        # Annotation errors intentionally remain fatal: an unlabelled recording
+        # must never silently turn into a background recording.
         annotation = read_tusz_seizure_annotation(edf_path)
         try:
             result = process_single_edf(edf_path, channel_order)
             if result["error"]:
                 errors.append({"file": edf_path, "error": result["error"]})
                 continue
+            n_segments = result["n_samples"] // SEGMENT_SAMPLES
+            if n_segments == 0:
+                errors.append(
+                    {
+                        "file": edf_path,
+                        "error": (
+                            f"recording has {result['n_samples']} samples after resampling; "
+                            f"at least {SEGMENT_SAMPLES} are required"
+                        ),
+                    }
+                )
+                continue
             valid_files.append(edf_path)
-            trial_lengths.append(result["n_samples"])
-            original_sfreqs.append(result["original_sfreq"])
-            source_paths.append(result["source_path"])
-            trial_ids.append(result["trial_id"])
-            seizure_intervals.append(annotation["intervals_sec"])
-            seizure_annotation_paths.append(annotation["annotation_path"])
-        except Exception as e:
-            errors.append({"file": edf_path, "error": str(e), "traceback": traceback.format_exc()})
+            source_records.append(
+                {
+                    "n_segments": n_segments,
+                    "original_sfreq": result["original_sfreq"],
+                    "source_path": result["source_path"],
+                    "trial_id": result["trial_id"],
+                    "seizure_intervals": annotation["intervals_sec"],
+                    "seizure_annotation_path": annotation["annotation_path"],
+                }
+            )
+            dropped_tail_samples.append(
+                result["n_samples"] - n_segments * SEGMENT_SAMPLES
+            )
+        except Exception as exc:
+            errors.append(
+                {
+                    "file": edf_path,
+                    "error": str(exc),
+                    "traceback": traceback.format_exc(),
+                }
+            )
 
     if not valid_files:
         return {"status": "empty", "h5_path": None, "errors": errors}
 
-    n_trials = len(valid_files)
+    n_source_trials = len(valid_files)
+    n_segments = sum(record["n_segments"] for record in source_records)
     n_channels = len(channel_order)
-    max_samples = max(trial_lengths)
-
-    # 计算 LaBraM 映射
     in_labram, labram_indices, labram_names = compute_labram_mapping(channel_order)
 
-    # === 写入 H5：逐 trial 写入，不构建完整 3D 数组 ===
+    segment_ids = []
+    parent_trial_ids = []
+    parent_trial_indices = []
+    segment_indices = []
+    segment_start_samples = []
+    segment_start_sec = []
+    source_paths = []
+    original_sfreqs = []
+    seizure_annotation_paths = []
+    local_seizure_intervals = []
+    seizure_overlap_sec = []
+    seizure_fraction = []
+    seizure_label = []
+    for parent_index, record in enumerate(source_records):
+        for segment_index in range(record["n_segments"]):
+            start_sample = segment_index * SEGMENT_SAMPLES
+            start_sec = start_sample / TARGET_SRATE
+            local, overlap, fraction, label = _segment_annotation(
+                record["seizure_intervals"], start_sec
+            )
+            segment_ids.append(f"{record['trial_id']}__seg{segment_index:04d}")
+            parent_trial_ids.append(record["trial_id"])
+            parent_trial_indices.append(parent_index)
+            segment_indices.append(segment_index)
+            segment_start_samples.append(start_sample)
+            segment_start_sec.append(start_sec)
+            source_paths.append(record["source_path"])
+            original_sfreqs.append(record["original_sfreq"])
+            seizure_annotation_paths.append(record["seizure_annotation_path"])
+            local_seizure_intervals.append(local)
+            seizure_overlap_sec.append(overlap)
+            seizure_fraction.append(fraction)
+            seizure_label.append(label)
+
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    chunk_shape = (1, n_channels, min(CHUNK_TIME, max_samples))
-
     with h5py.File(output_path, "w") as f:
-        dset = f.create_dataset("data", shape=(n_trials, n_channels, max_samples),
-                                dtype="float32", chunks=chunk_shape,
-                                compression="gzip", compression_opts=GZIP_LEVEL,
-                                fillvalue=0.0)
+        data = f.create_dataset(
+            "data",
+            shape=(n_segments, n_channels, SEGMENT_SAMPLES),
+            dtype="float32",
+            chunks=(1, n_channels, SEGMENT_SAMPLES),
+            compression="gzip",
+            compression_opts=GZIP_LEVEL,
+        )
 
-        # 逐 trial 重新处理并写入（每次只有 1 个 EDF 在内存中）
-        write_idx = 0
-        for edf_path in valid_files:
+        write_index = 0
+        for edf_path, record in zip(valid_files, source_records):
             try:
                 result = process_single_edf(edf_path, channel_order)
                 if result["error"]:
                     raise RuntimeError(result["error"])
-                trial_data = result["data"]  # (n_channels, n_samples)
-                dset[write_idx, :, :trial_data.shape[1]] = trial_data
+                trial_data = result["data"]
+                for segment_index in range(record["n_segments"]):
+                    start = segment_index * SEGMENT_SAMPLES
+                    data[write_index] = trial_data[:, start : start + SEGMENT_SAMPLES]
+                    write_index += 1
                 del trial_data, result
-                write_idx += 1
-            except Exception as e:
-                errors.append({"file": edf_path, "error": f"write_pass: {e}"})
-                write_idx += 1
+            except Exception as exc:
+                errors.append({"file": edf_path, "error": f"write_pass: {exc}"})
 
-        f.create_dataset("trial_lengths_in_samples", data=np.array(trial_lengths, dtype=np.int32))
-        f.create_dataset("channels", data=np.array(channel_order, dtype="S"))
+        f.create_dataset(
+            "trial_lengths_in_samples",
+            data=np.full(n_segments, SEGMENT_SAMPLES, dtype=np.int32),
+        )
+        f.create_dataset("channels", data=np.asarray(channel_order, dtype="S"))
         f.create_dataset("channels_in_labram", data=in_labram)
         f.create_dataset("labram_channel_indices", data=labram_indices)
-        f.create_dataset("labram_channel_names", data=np.array(labram_names, dtype="S"))
-        f.create_dataset("original_sample_rates_hz", data=np.array(original_sfreqs, dtype=np.float32))
-        f.create_dataset("source_paths", data=np.array(source_paths, dtype="S"))
-        f.create_dataset("trial_ids", data=np.array(trial_ids, dtype="S"))
+        f.create_dataset("labram_channel_names", data=np.asarray(labram_names, dtype="S"))
+        f.create_dataset(
+            "original_sample_rates_hz", data=np.asarray(original_sfreqs, dtype=np.float32)
+        )
+        f.create_dataset("source_paths", data=np.asarray(source_paths, dtype="S"))
+        # Compatibility: legacy readers call each row a trial.
+        f.create_dataset("trial_ids", data=np.asarray(segment_ids, dtype="S"))
+        f.create_dataset("segment_ids", data=np.asarray(segment_ids, dtype="S"))
+        f.create_dataset("parent_trial_ids", data=np.asarray(parent_trial_ids, dtype="S"))
+        f.create_dataset(
+            "parent_trial_indices", data=np.asarray(parent_trial_indices, dtype=np.int32)
+        )
+        f.create_dataset("segment_indices", data=np.asarray(segment_indices, dtype=np.int32))
+        f.create_dataset(
+            "segment_start_samples", data=np.asarray(segment_start_samples, dtype=np.int64)
+        )
+        f.create_dataset(
+            "segment_start_sec", data=np.asarray(segment_start_sec, dtype=np.float32)
+        )
+        f.create_dataset(
+            "seizure_overlap_sec", data=np.asarray(seizure_overlap_sec, dtype=np.float32)
+        )
+        f.create_dataset(
+            "seizure_fraction", data=np.asarray(seizure_fraction, dtype=np.float32)
+        )
+        f.create_dataset("seizure_label", data=np.asarray(seizure_label, dtype=np.int8))
+
         interval_counts = np.asarray(
-            [len(intervals) for intervals in seizure_intervals], dtype=np.int32
+            [len(intervals) for intervals in local_seizure_intervals], dtype=np.int32
         )
         max_intervals = int(interval_counts.max(initial=0))
         padded_intervals = np.full(
-            (n_trials, max_intervals, 2), np.nan, dtype=np.float32
+            (n_segments, max_intervals, 2), np.nan, dtype=np.float32
         )
-        for trial_index, intervals in enumerate(seizure_intervals):
-            padded_intervals[trial_index, : len(intervals)] = intervals
+        for row_index, intervals in enumerate(local_seizure_intervals):
+            padded_intervals[row_index, : len(intervals)] = intervals
         f.create_dataset("seizure_interval_count", data=interval_counts)
         f.create_dataset("seizure_intervals_sec", data=padded_intervals)
         f.create_dataset(
@@ -249,31 +375,54 @@ def process_group(edf_files: list[str], output_path: str, subject_id: str, chann
         )
 
         channel_signature = "|".join(channel_order)
-        preprocess_log = json.dumps({
-            "bandpass_hz": [L_FREQ, H_FREQ],
-            "notch_hz": [NOTCH_FREQ],
-            "resample_to_hz": TARGET_SRATE,
-            "source_dataset": "TUEG_v2.0.2",
-        }, ensure_ascii=False)
+        preprocess_log = json.dumps(
+            {
+                "bandpass_hz": [L_FREQ, H_FREQ],
+                "notch_hz": [NOTCH_FREQ],
+                "resample_to_hz": TARGET_SRATE,
+                "source_dataset": "TUEG_v2.0.2",
+                "channel_policy": "fixed standard-19",
+                "reference_scheme": REFERENCE_SCHEME,
+                "reference_channels": list(channel_order),
+                "segment_duration_sec": SEGMENT_DURATION_SEC,
+                "segment_tail_policy": "drop incomplete tail",
+            },
+            ensure_ascii=False,
+        )
 
         f.attrs["sample_rate"] = TARGET_SRATE
-        f.attrs["trial_count"] = n_trials
+        f.attrs["trial_count"] = n_segments
+        f.attrs["source_trial_count"] = n_source_trials
+        f.attrs["segment_count"] = n_segments
+        f.attrs["segment_duration_sec"] = SEGMENT_DURATION_SEC
+        f.attrs["segment_samples"] = SEGMENT_SAMPLES
+        f.attrs["presegmented_10s"] = True
+        f.attrs["data_layout"] = "segments_channels_samples"
+        f.attrs["incomplete_tail_policy"] = "drop"
+        f.attrs["dropped_tail_samples_total"] = int(sum(dropped_tail_samples))
         f.attrs["has_labels"] = True
         f.attrs["all_trials_have_labels"] = True
         f.attrs["seizure_label_source"] = "TUSZ csv_bi"
+        f.attrs["seizure_fraction_threshold"] = SEIZURE_FRACTION_THRESHOLD
         f.attrs["subject_id_original"] = subject_id
         f.attrs["channel_signature"] = channel_signature
+        f.attrs["reference_scheme"] = REFERENCE_SCHEME
+        f.attrs["reference_channel_count"] = n_channels
+        f.attrs["reference_channel_signature"] = channel_signature
         f.attrs["preprocess_log"] = preprocess_log
 
-    total_duration = sum(trial_lengths) / TARGET_SRATE
     return {
         "status": "ok",
         "h5_path": output_path,
-        "n_trials": n_trials,
+        "n_trials": n_segments,
+        "n_source_trials": n_source_trials,
+        "n_segments": n_segments,
         "n_channels": n_channels,
-        "total_duration_sec": total_duration,
+        "total_duration_sec": n_segments * SEGMENT_DURATION_SEC,
+        "dropped_tail_samples": int(sum(dropped_tail_samples)),
         "errors": errors,
     }
+
 
 def discover_subjects(edf_root: str) -> list[str]:
     """发现所有被试目录。结构: edf/{partition}/{subject_id}/"""

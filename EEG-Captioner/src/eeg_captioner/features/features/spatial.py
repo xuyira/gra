@@ -31,7 +31,7 @@ from eeg_captioner.features.feature_registry import TrialContext
 
 # Canonical 5-band definitions (kept consistent with bandpower defaults).
 DEFAULT_BANDS: Dict[str, Tuple[float, float]] = {
-    "delta": (0.5, 4.0),
+    "delta": (1.6, 4.0),
     "theta": (4.0, 8.0),
     "alpha": (8.0, 13.0),
     "beta": (13.0, 30.0),
@@ -44,7 +44,7 @@ DEFAULT_ROIS: Dict[str, List[str]] = {
     "frontal": ["FP1", "FP2", "F3", "F4", "F7", "F8", "FZ"],
     "central": ["C3", "C4", "CZ"],
     "parietal": ["P3", "P4", "PZ"],
-    "occipital": ["O1", "O2", "OZ"],
+    "occipital": ["O1", "O2"],
     "temporal": ["T3", "T4", "T5", "T6"],
 }
 
@@ -122,7 +122,7 @@ def build_spatial_plugin(config: Mapping[str, object]):
     bands = _normalize_bands(config.get("bands"))  # type: ignore[arg-type]
     band_names = list(bands.keys())
 
-    analysis_range = config.get("analysis_range", [0.5, 45.0])
+    analysis_range = config.get("analysis_range", [1.6, 45.0])
     analysis_lo, analysis_hi = float(analysis_range[0]), float(analysis_range[1])  # type: ignore[index]
     welch_window_sec = float(config.get("welch_window_sec", 4.0))
     welch_overlap = float(config.get("welch_overlap", 0.5))

@@ -8,7 +8,10 @@ import sys
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="eeg-captioner")
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser("preprocess", help="TUEG EDF -> subject H5 in microvolts")
+    p = sub.add_parser(
+        "preprocess",
+        help="TUSZ EDF -> shared standard-19 10-second H5 segments in microvolts",
+    )
     p.add_argument("--edf-root", required=True); p.add_argument("--output", required=True)
     p.add_argument("--workers", type=int, default=1); p.add_argument("--max-subjects", type=int)
     p = sub.add_parser("features", help="Extract early/middle/last numerical features", add_help=False)
@@ -28,6 +31,15 @@ def main(argv=None):
     for name in ("processed", "summaries", "captions", "output"):
         p.add_argument("--" + name, required=True)
     p.add_argument("--numeric-only", action="store_true"); p.add_argument("--seed", type=int, default=42)
+    p = sub.add_parser(
+        "rule-qa",
+        help="Export deterministic EEG signal-property QA without captions or an LLM",
+    )
+    p.add_argument("--processed", required=True)
+    p.add_argument("--summaries", required=True)
+    p.add_argument("--output", required=True)
+    p.add_argument("--require-bin-consistency", action="store_true")
+    p.add_argument("--min-margin", type=float, default=0.10)
     for command in ("train", "evaluate"):
         p = sub.add_parser(command); p.add_argument("--config", required=True)
     p = sub.add_parser("export", help="Export trusted research encoder and final adapter")
@@ -36,7 +48,7 @@ def main(argv=None):
     p.add_argument("--source", required=True); p.add_argument("--output", required=True)
     p = sub.add_parser("infer", help="Caption or answer a question about one preprocessed segment")
     p.add_argument("--bundle", required=True); p.add_argument("--qwen-path", required=True)
-    p.add_argument("--eeg-h5", required=True); p.add_argument("--trial", type=int, default=0)
+    p.add_argument("--eeg-h5", required=True); p.add_argument("--trial", type=int, default=0, help="H5 segment row")
     p.add_argument("--start-sample", type=int, default=0); p.add_argument("--question")
     p.add_argument("--device", default="cuda"); p.add_argument("--dtype", default="bfloat16")
     p.add_argument("--max-new-tokens", type=int, default=320)
@@ -74,6 +86,15 @@ def main(argv=None):
     elif args.command == "prepare":
         from .data.prepare import prepare
         print(prepare(args.processed, args.summaries, args.captions, args.output, not args.numeric_only, args.seed))
+    elif args.command == "rule-qa":
+        from .data.rule_qa import export_rule_qa
+        print(json.dumps(export_rule_qa(
+            args.processed,
+            args.summaries,
+            args.output,
+            require_bin_consistency=args.require_bin_consistency,
+            min_margin=args.min_margin,
+        ), indent=2))
     elif args.command in {"train", "evaluate"}:
         from .io import load_config
         config = load_config(args.config)

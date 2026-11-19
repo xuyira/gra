@@ -12,7 +12,7 @@ from eeg_captioner.features.feature_registry import TrialContext
 
 
 DEFAULT_BANDS: Dict[str, Tuple[float, float]] = {
-    "delta": (0.5, 4.0),
+    "delta": (1.6, 4.0),
     "theta": (4.0, 8.0),
     "alpha": (8.0, 13.0),
     "beta": (13.0, 30.0),
@@ -35,7 +35,7 @@ def _normalize_bands(
 def build_bandpower_plugin(config: Mapping[str, object]):
     """Create a configured bandpower feature callable."""
     bands = _normalize_bands(config.get("bands"))  # type: ignore[arg-type]
-    analysis_range = config.get("analysis_range", [0.5, 45.0])
+    analysis_range = config.get("analysis_range", [1.6, 45.0])
     analysis_lo = float(analysis_range[0])
     analysis_hi = float(analysis_range[1])
     welch_window_sec = float(config.get("welch_window_sec", 4.0))

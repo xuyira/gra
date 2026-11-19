@@ -1,7 +1,8 @@
 from pathlib import Path
-from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
 import os
+
+from eeg_captioner.channels import STANDARD_19_CHANNELS
 from eeg_captioner.io import write_json
 from . import tueg
 
@@ -9,7 +10,7 @@ from . import tueg
 def process_subject(task):
     subject, output = task
     subject = Path(subject)
-    groups = defaultdict(list)
+    paths = []
     errors = []
     for path in sorted(subject.rglob("*.edf")):
         try:
@@ -19,16 +20,24 @@ def process_subject(task):
                     raise ValueError("Duplicate canonical EEG channel names")
                 if not names:
                     raise ValueError("No EEG channels")
-            groups[tuple(sorted(names))].append(str(path))
+                missing = [name for name in STANDARD_19_CHANNELS if name not in names]
+                if missing:
+                    raise ValueError(f"Missing required standard-19 channels: {missing}")
+            paths.append(str(path))
         except Exception as e:
             errors.append({"file": str(path), "error": str(e)})
     results = []
-    for i, (channels, paths) in enumerate(sorted(groups.items(), key=lambda item: (-len(item[1]), item[0]))):
-        destination = Path(output) / (subject.name + (f"-{i}" if i else "") + ".h5")
+    if paths:
+        destination = Path(output) / (subject.name + ".h5")
         if destination.exists():
             raise FileExistsError(f"Refusing to overwrite {destination}")
         temporary = destination.with_suffix(".h5.partial")
-        result = tueg.process_group(paths, str(temporary), subject.name, list(channels))
+        result = tueg.process_group(
+            paths,
+            str(temporary),
+            subject.name,
+            list(STANDARD_19_CHANNELS),
+        )
         if result["status"] == "ok" and not result["errors"]:
             temporary.replace(destination)
             result["h5_path"] = str(destination)

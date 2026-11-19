@@ -8,7 +8,7 @@
 
 ## **Per channel bandpower features**
 
-| Channel | delta abs µV² | theta abs µV² | alpha abs µV² | beta abs µV² | gamma abs µV² | delta rel | theta rel | alpha rel | beta rel | gamma rel | total 0.5-45 Hz power µV² |
+| Channel | delta abs µV² | theta abs µV² | alpha abs µV² | beta abs µV² | gamma abs µV² | delta rel | theta rel | alpha rel | beta rel | gamma rel | total 1.6-45 Hz power µV² |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | FP1 | {fp1_delta_abs} | {fp1_theta_abs} | {fp1_alpha_abs} | {fp1_beta_abs} | {fp1_gamma_abs} | {fp1_delta_rel} | {fp1_theta_rel} | {fp1_alpha_rel} | {fp1_beta_rel} | {fp1_gamma_rel} | {fp1_total_power} |
 | FP2 | {fp2_delta_abs} | {fp2_theta_abs} | {fp2_alpha_abs} | {fp2_beta_abs} | {fp2_gamma_abs} | {fp2_delta_rel} | {fp2_theta_rel} | {fp2_alpha_rel} | {fp2_beta_rel} | {fp2_gamma_rel} | {fp2_total_power} |
@@ -60,7 +60,7 @@
 | frontal | FP1, FP2, F3, F4, F7, F8, FZ | {frontal_n_good} |
 | central | C3, C4, CZ | {central_n_good} |
 | parietal | P3, P4, PZ | {parietal_n_good} |
-| occipital | O1, O2, OZ | {occipital_n_good} |
+| occipital | O1, O2 | {occipital_n_good} |
 | temporal | T3, T4, T5, T6 | {temporal_n_good} |
 
 ## **Per channel spectral advanced features**
@@ -178,7 +178,7 @@
 
 ### Source-network total power
 
-| Network | total 0.5-45 Hz power Am² |
+| Network | total 1.6-45 Hz power Am² |
 |---|---:|
 | Visual | {vis_total_power} |
 | Somatomotor | {sommot_total_power} |

@@ -19,29 +19,31 @@ segmentation:
 bad_channel:
   enabled: true
   action: mark
-  always_bad_channels: [A1, A2, T1, T2]
+  bad_trial_policy: mark
+  always_bad_channels: []
   peak_threshold_uv: 500.0
   flat_threshold_uv: 1.0
   bad_percent_threshold: 5.0
   min_bad_duration_sec: 0.02
   max_bad_channel_ratio_for_trial: 0.3
   max_bad_time_ratio_for_trial: 0.2
-  # After trial-level bad-channel mask: reject whole 10s segment (skip features)
+  # Optional hard rejection after marking bad channels. Disabled windows remain
+  # available to CerebraGloss and keep one-to-one cross-modal alignment.
   # if any remaining channel has any sample |V| > hard_peak_threshold_uv.
   segment_reject:
-    enabled: true
+    enabled: false
     hard_peak_threshold_uv: 100.0
 
 features:
   bandpower:
     enabled: true
     bands:
-      delta: [0.5, 4.0]
+      delta: [1.6, 4.0]
       theta: [4.0, 8.0]
       alpha: [8.0, 13.0]
       beta: [13.0, 30.0]
       gamma: [30.0, 45.0]
-    analysis_range: [0.5, 45.0]
+    analysis_range: [1.6, 45.0]
     welch_window_sec: 3.33
     welch_overlap: 0.5
     relative: true
@@ -50,7 +52,7 @@ features:
     enabled: true
   spectral_advanced:
     enabled: true
-    analysis_range: [0.5, 45.0]
+    analysis_range: [1.6, 45.0]
     alpha_range: [8.0, 13.0]
     fooof_fit_range: [2.0, 40.0]
     welch_window_sec: 3.33
@@ -59,12 +61,12 @@ features:
   spatial:
     enabled: true
     bands:
-      delta: [0.5, 4.0]
+      delta: [1.6, 4.0]
       theta: [4.0, 8.0]
       alpha: [8.0, 13.0]
       beta: [13.0, 30.0]
       gamma: [30.0, 45.0]
-    analysis_range: [0.5, 45.0]
+    analysis_range: [1.6, 45.0]
     welch_window_sec: 3.33
     welch_overlap: 0.5
     roi_min_good_channels: 1
@@ -100,9 +102,9 @@ features:
     max_epochs: 1
     min_channels: 17
     bands:
-      delta: [0.5, 4.0]
+      delta: [1.6, 4.0]
       theta: [4.0, 8.0]
       alpha: [8.0, 13.0]
       beta: [13.0, 30.0]
       gamma: [30.0, 45.0]
-    analysis_range: [0.5, 45.0]
+    analysis_range: [1.6, 45.0]

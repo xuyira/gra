@@ -42,7 +42,7 @@ def build_source_network_plugin(config: Mapping[str, object]):
     n_bands = len(band_names)
     n_networks = len(YEO7_NETWORK_NAMES)
 
-    analysis_range = config.get("analysis_range", [0.5, 45.0])
+    analysis_range = config.get("analysis_range", [1.6, 45.0])
     analysis_lo = float(analysis_range[0])
     analysis_hi = float(analysis_range[1])
     epoch_duration_sec = float(config.get("epoch_duration_sec", 4.0))

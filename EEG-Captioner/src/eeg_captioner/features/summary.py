@@ -862,6 +862,7 @@ def collect_segments(
                 if bad_trial_dset is not None
                 else np.zeros(valid.shape[0], dtype=bool)
             )
+            bad_trial_policy = str(f.attrs.get("bad_trial_policy", "reject")).lower()
             trial_ids = decode_array(f["meta/trial_ids"][:])
             starts_dset = dataset(f, "meta/segment_start_sec")
             segment_starts = (
@@ -903,7 +904,8 @@ def collect_segments(
                         value = float(segment_starts[trial_index, segment_index])
                         start_sec = None if math.isnan(value) else value
 
-                    if is_bad_segment or trial_is_bad:
+                    trial_is_rejected = trial_is_bad and bad_trial_policy == "reject"
+                    if is_bad_segment or trial_is_rejected:
                         bad_records.append(
                             {
                                 "h5": str(path),
@@ -913,7 +915,7 @@ def collect_segments(
                                 "segment_start_sec": start_sec,
                                 "reason": (
                                     "bad_trial"
-                                    if trial_is_bad and not is_bad_segment
+                                    if trial_is_rejected and not is_bad_segment
                                     else "bad_segment"
                                 ),
                             }
@@ -946,6 +948,12 @@ def output_stem(
     if trial_ids is None:
         trial_ids = decode_array(f["meta/trial_ids"][:])
     trial_id = trial_ids[ref.trial_index] if ref.trial_index < len(trial_ids) else f"trial{ref.trial_index}"
+    if bool(f.attrs.get("source_presegmented_10s", False)):
+        if ref.segment_index != 0 or re.fullmatch(r".+__seg\d+", trial_id) is None:
+            raise ValueError(
+                f"Invalid presegmented feature identity: {trial_id}, segment {ref.segment_index}"
+            )
+        return f"{ref.h5_path.stem}__{trial_id}"
     return f"{ref.h5_path.stem}__{trial_id}__seg{ref.segment_index:04d}"
 
 

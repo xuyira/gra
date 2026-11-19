@@ -104,7 +104,7 @@ def _alpha_osc_power(
 
 def build_spectral_advanced_plugin(config: Mapping[str, object]):
     """Create spectral_advanced feature callable."""
-    analysis_range = config.get("analysis_range", [0.5, 45.0])
+    analysis_range = config.get("analysis_range", [1.6, 45.0])
     analysis_lo, analysis_hi = float(analysis_range[0]), float(analysis_range[1])
     alpha_range = config.get("alpha_range", [8.0, 13.0])
     alpha_lo, alpha_hi = float(alpha_range[0]), float(alpha_range[1])

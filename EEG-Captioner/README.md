@@ -92,7 +92,9 @@ eeg-captioner preprocess --edf-root /path/to/tueg/edf \
   --output data/processed --workers 4
 ```
 
-Replace `example.h5` below with a generated H5 file. `--trial` indexes a recording within that file; `--start-sample` is the segment's starting sample at 200 Hz.
+Replace `example.h5` below with a generated H5 file. Preprocessing stores one
+fixed-standard-19, 10-second window per H5 row, so `--trial` selects the window
+row and `--start-sample` remains zero.
 
 ```bash
 # Caption generation
@@ -107,7 +109,21 @@ eeg-captioner infer \
   --question 'During the early part of this EEG segment, which frequency band has the highest absolute power in the temporal region? Options: A. delta B. theta C. alpha D. beta E. gamma. Answer with only the option letter and label.'
 ```
 
-Inputs must be in **microvolts at 200 Hz**. The loader selects the fixed 20-channel order and applies `/100` scaling internally. Only a missing OZ channel may be zero-filled. See [input requirements](docs/data.md) before supplying custom H5 files.
+Inputs are stored in **microvolts at 200 Hz** as `[19,2000]`. CerebraGloss can
+consume that row directly. At the EEG-Captioner model boundary, the loader
+inserts an all-zero OZ row, selects the historical fixed 20-channel order, and
+applies `/100` scaling internally. See [input requirements](docs/data.md) before
+supplying custom H5 files.
+
+To export the 25 deterministic signal-property QA templates without generating
+teacher captions, run:
+
+```bash
+eeg-captioner rule-qa \
+  --processed data/processed \
+  --summaries data/summaries \
+  --output data/rule_qa.jsonl
+```
 
 The recorded one-segment inference check used approximately **16.9 GiB** of peak allocated GPU memory on an A100 40 GB. This is an observed compatibility check, not a minimum-memory guarantee; full training has different requirements.
 
@@ -215,7 +231,7 @@ The [reproduction notes](docs/reproduction.md) explain metric aggregation, capti
 configs/                       Feature, training, and evaluation recipes
 scripts/train_chain.sh         End-to-end training and bundle export
 src/eeg_captioner/
-├── preprocessing/             TUEG EDF to subject H5
+├── preprocessing/             TUSZ EDF to shared 19-channel segment H5
 ├── features/                  Numerical features and summaries
 ├── data/                      Manifest, QA rules, thresholds, sampling
 ├── models/                    Encoder, query heads, projector, Qwen interface
