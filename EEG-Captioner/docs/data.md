@@ -103,16 +103,123 @@ summaries without a teacher LLM or caption archive:
 eeg-captioner rule-qa \
   --processed data/processed \
   --summaries data/summaries \
+  --calibration configs/qa_calibration.tusz_train.json \
   --output data/rule_qa.jsonl
 ```
 
-The JSONL is flattened to one record per eligible segment/question pair and
+The JSONL contains one additional binary seizure-presence question for every
+10-second window, alongside the eligible signal-property questions. Each record
 contains the exact H5 row, stable segment ID, question, options, answer index,
-answer text, TUSZ seizure metadata, and a `bin_consistent` audit flag. By
-default, all numerically decisive rule answers are retained. Add
-`--require-bin-consistency` to reproduce the older preparation filter based on
-the frozen population thresholds. Those thresholds were calibrated on the
-historical multi-dataset corpus and should not be assumed optimal for TUSZ.
+answer text, and TUSZ seizure metadata. Rule QA uses exact numerical features;
+historical text-bin thresholds are not used.
+
+Fit the four data-dependent rule thresholds once, using TUSZ train only:
+
+```bash
+eeg-captioner fit-qa-calibration \
+  --features-root data/features-train \
+  --processed-root data/processed-train \
+  --output configs/qa_calibration.tusz_train.json
+```
+
+The fitted JSON retains the fixed `min_margin`, stores patient-equal 33rd
+percentile thresholds for alpha/gamma temporal change and delta/gamma
+lateralization, and records its input contract and fit counts. Validation and
+test QA must read this frozen train calibration rather than fitting again.
+
+## Stage-specific training JSONL
+
+Do not use one mixed JSONL for every training phase. The three phases have
+different input and supervision contracts:
+
+1. **EEG encoder (Stage 1):** one row per 10-second window with the original
+   25 signal-property class labels. The seizure label is metadata only and is
+   not added as a 26th encoder head. Build this once train, validation, and test
+   rule-QA files all exist:
+
+   ```bash
+   eeg-captioner encoder-manifest \
+     --train-qa /data/derived/tusz_train/annotations/signal_rule_qa.jsonl \
+     --val-qa /data/derived/tusz_dev/annotations/signal_rule_qa.jsonl \
+     --test-qa /data/derived/tusz_eval/annotations/signal_rule_qa.jsonl \
+     --output /data/derived/manifests/stage1_eeg_encoder.jsonl
+   ```
+
+2. **EEG projector alignment (Stage 2):** one row per eligible rule QA. Each
+   row contains the H5 window and a question/answer pair, including the one
+   seizure-presence QA per window. It contains no PNG and no CerebraGloss
+   caption.
+
+3. **Multimodal joint SFT (Stage 3):** each QA row contains both the same EEG
+   window and its CerebraGloss PNG. There is also exactly one EEG+PNG rule
+   caption row per window. The first version uses the original rule caption and
+   does not add teacher-LLM rewrites.
+
+Build Stages 2 and 3 separately for each official split:
+
+```bash
+eeg-captioner stage-manifests \
+  --split train \
+  --rule-qa /data/derived/tusz_train/annotations/signal_rule_qa.jsonl \
+  --cerebragloss-root /data/derived/tusz_train/cerebragloss \
+  --output-dir /data/derived/tusz_train/manifests
+```
+
+Use `--split val` for TUSZ `dev` and `--split test` for TUSZ `eval`. The
+outputs are:
+
+```text
+stage2_eeg_projector.<split>.jsonl
+stage3_multimodal_sft.<split>.jsonl
+stage_manifests.<split>.metadata.json
+```
+
+Every path inside a manifest is relative to that manifest's directory. The
+builder streams the source QA and refuses partial or ambiguous joins. It checks
+that `rule_qa.raw_segment_id == cerebragloss.segment_id`, validates the H5 row
+and `[19,2000]` shape at 200 Hz, checks seizure metadata in both routes, and
+requires one JSON, PNG, nonempty caption, and seizure QA for every window.
+
+The `messages` field uses Qwen-style typed content. `image` and `text` are the
+normal Qwen-VL items; `eeg` is the custom item that the later training loader
+must replace with EEG encoder/projector embeddings. Flat `eeg_path`,
+`trial_index`, `image_path`, `instruction`, and `answer` fields are retained so
+the loader does not need to parse chat content to locate tensors.
+
+## Stage-2 and Stage-3 training adapter
+
+The new language-stage loader does not load a multi-gigabyte JSONL into RAM.
+It builds a compact byte-offset index once and seeks individual rows on demand.
+At training time it reads the H5 row, and for Stage 3 also loads the matching
+PNG through the native Qwen2.5-VL processor. Chat messages are rebuilt from the
+flat fields, so the serialized `messages` field is not treated as an
+independent source of supervision.
+
+The model registers one special `<|eeg_pad|>` token and places it 200 times in
+the user prompt. A forward hook replaces those placeholder embeddings with the
+200 outputs of the frozen EEG encoder plus trainable EEG projector. Qwen still
+receives its normal `input_ids`, `pixel_values`, and `image_grid_thw`, so its
+native visual-token path remains active.
+
+- Stage 2 freezes the EEG encoder and all Qwen2.5-VL parameters; only the EEG
+  projector is trainable.
+- Stage 3 keeps the EEG encoder and pretrained Qwen visual stack frozen, and
+  trains the EEG projector plus language-model attention LoRA adapters.
+- `caption_fraction` controls QA/caption resampling in Stage 3. It is a
+  training parameter, not a change to the stored dataset.
+
+Run the real split-aware stages with:
+
+```bash
+eeg-captioner train --config configs/train_stage2_eeg_projector.yaml
+eeg-captioner train --config configs/train_stage3_multimodal_sft.yaml
+```
+
+For the 49-window integration check, use `train_stage2_smoke.yaml` and
+`train_stage3_smoke.yaml`. These configs set `smoke_overfit: true`, deliberately
+reuse training examples for loss checks, and therefore do not report a valid
+generalization estimate. They are only for checking CUDA, gradients,
+checkpointing, and whether loss can decrease before full data construction.
 
 Caption text is embedded in the manifest, eliminating dependencies on external
 caption files during training. EEG and summary paths are relocatable when moved

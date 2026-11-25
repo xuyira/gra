@@ -7,9 +7,21 @@ import os
 import h5py
 
 from eeg_captioner.io import read_jsonl, sha256, write_json, write_jsonl
-from .binning import Thresholds, audit_case
+from .calibration import load_rule_calibration, validate_processed_contract
 from .rules import MODEL_CHANNELS, parse_summary_features, script_answer
 from .summaries import SEGMENT_STEM, segment_summaries
+
+
+SEIZURE_QUESTION = {
+    "id": "tusz_seizure_presence",
+    "type": "seizure_presence",
+    "options": ["Yes", "No"],
+    "question": (
+        "Is seizure activity present in this EEG segment? Options: "
+        "A. Yes B. No. "
+        "Answer with only the option letter and label."
+    ),
+}
 
 
 def _decode(value) -> str:
@@ -31,16 +43,16 @@ def _read_store_metadata(path: Path) -> dict:
             if "source_paths" in f
             else [""] * n_rows
         )
-        seizure_labels = (
-            [int(value) for value in f["seizure_label"][:]]
-            if "seizure_label" in f
-            else [None] * n_rows
-        )
-        seizure_fractions = (
-            [float(value) for value in f["seizure_fraction"][:]]
-            if "seizure_fraction" in f
-            else [None] * n_rows
-        )
+        if "seizure_label" not in f or "seizure_fraction" not in f:
+            raise ValueError(
+                f"Missing required TUSZ seizure label metadata in {path}"
+            )
+        seizure_labels = [int(value) for value in f["seizure_label"][:]]
+        seizure_fractions = [float(value) for value in f["seizure_fraction"][:]]
+        if len(seizure_labels) != n_rows or len(seizure_fractions) != n_rows:
+            raise ValueError(f"TUSZ seizure metadata does not match data in {path}")
+        if any(label not in (0, 1) for label in seizure_labels):
+            raise ValueError(f"TUSZ seizure labels must be binary in {path}")
         return {
             "trials": trials,
             "channels": {_decode(value).upper() for value in f["channels"][:]},
@@ -69,24 +81,19 @@ def export_rule_qa(
     summaries: str | Path,
     output: str | Path,
     *,
-    require_bin_consistency: bool = False,
-    min_margin: float = 0.10,
+    calibration_path: str | Path | None = None,
 ) -> dict:
     """Flatten valid deterministic questions into one JSONL record per QA pair."""
-    if not 0 <= min_margin < 1:
-        raise ValueError("min_margin must be in [0, 1)")
     processed, summaries, output = map(Path, (processed, summaries, output))
     questions_path = Path(__file__).with_name("questions_25.jsonl")
-    thresholds_path = Path(__file__).with_name("bin_thresholds.json")
     questions = read_jsonl(questions_path)
-    thresholds = Thresholds(thresholds_path)
+    calibration = load_rule_calibration(calibration_path)
 
     rows = []
     stores = {}
     rejections = Counter()
     eligible_by_type = Counter()
     eligible_by_question = Counter()
-    bin_audit = Counter()
     segment_count = 0
 
     for summary_path in segment_summaries(summaries):
@@ -98,6 +105,7 @@ def export_rule_qa(
         if not raw_path.is_file():
             raise FileNotFoundError(f"Missing preprocessed H5 for {summary_path}: {raw_path}")
         if raw_path not in stores:
+            validate_processed_contract(raw_path, calibration)
             stores[raw_path] = _read_store_metadata(raw_path)
         meta = stores[raw_path]
         required = set(MODEL_CHANNELS) - {"OZ"}
@@ -111,20 +119,9 @@ def export_rule_qa(
         segment_count += 1
 
         for head_index, question in enumerate(questions):
-            label, reason = script_answer(question, features, min_margin)
+            label, reason = script_answer(question, features, calibration)
             if label is None:
                 rejections[reason or "rule_invalid"] += 1
-                continue
-
-            case = {
-                **question,
-                "answer_label": label,
-                "question_id": f"q{head_index + 1:04d}",
-            }
-            audit = audit_case(case, features, thresholds)
-            bin_audit["consistent" if audit["eligible"] else audit["reason"]] += 1
-            if require_bin_consistency and not audit["eligible"]:
-                rejections[f"bin/{audit['reason']}"] += 1
                 continue
 
             answer_index = question["options"].index(label)
@@ -154,12 +151,44 @@ def export_rule_qa(
                     "answer_label": label,
                     "answer": answer,
                     "annotation_source": "eeg_captioner_rule",
-                    "bin_consistent": bool(audit["eligible"]),
-                    "bin_audit_reason": audit["reason"],
                 }
             )
             eligible_by_type[question["type"]] += 1
             eligible_by_question[question["id"]] += 1
+
+        seizure_label = meta["seizure_labels"][row_index]
+        seizure_question = SEIZURE_QUESTION
+        seizure_answer_index = 0 if seizure_label == 1 else 1
+        seizure_answer_label = seizure_question["options"][seizure_answer_index]
+        rows.append(
+            {
+                "id": f"{summary_path.stem}__{seizure_question['id']}",
+                "segment_id": summary_path.stem,
+                "raw_segment_id": raw_segment_id,
+                "eeg_path": os.path.relpath(
+                    raw_path.resolve(), output.parent.resolve()
+                ),
+                "summary_path": os.path.relpath(
+                    summary_path.resolve(), output.parent.resolve()
+                ),
+                "trial_index": row_index,
+                "start_sample": start_sample,
+                "source_path": meta["source_paths"][row_index],
+                "seizure_label": seizure_label,
+                "seizure_fraction": meta["seizure_fractions"][row_index],
+                "question_id": seizure_question["id"],
+                "head_index": None,
+                "question_type": seizure_question["type"],
+                "question": seizure_question["question"],
+                "options": seizure_question["options"],
+                "answer_index": seizure_answer_index,
+                "answer_label": seizure_answer_label,
+                "answer": f"{chr(65 + seizure_answer_index)}. {seizure_answer_label}",
+                "annotation_source": "tusz_seizure_annotation",
+            }
+        )
+        eligible_by_type[seizure_question["type"]] += 1
+        eligible_by_question[seizure_question["id"]] += 1
 
     if not rows:
         raise ValueError("No eligible EEG rule-QA examples were generated")
@@ -171,16 +200,20 @@ def export_rule_qa(
         "schema": 1,
         "annotation_source": "eeg_captioner_rule",
         "segments_seen": segment_count,
-        "questions_per_segment": len(questions),
+        "questions_per_segment": len(questions) + 1,
         "qa_examples": len(rows),
-        "require_bin_consistency": require_bin_consistency,
-        "min_margin": min_margin,
+        "calibration_id": calibration.calibration_id,
+        "calibration_path": str(calibration.path),
+        "calibration_sha256": calibration.file_sha256,
+        "min_margin": calibration.min_margin,
+        "rule_thresholds": {
+            "temporal_pattern": dict(calibration.temporal_pattern),
+            "lateral_dominance": dict(calibration.lateral_dominance),
+        },
         "eligible_by_type": dict(sorted(eligible_by_type.items())),
         "eligible_by_question": dict(sorted(eligible_by_question.items())),
         "rejections": dict(sorted(rejections.items())),
-        "bin_audit": dict(sorted(bin_audit.items())),
         "questions_sha256": sha256(questions_path),
-        "thresholds_sha256": sha256(thresholds_path),
     }
     write_json(output.with_suffix(".metadata.json"), metadata)
     return metadata

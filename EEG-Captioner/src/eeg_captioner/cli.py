@@ -13,6 +13,10 @@ def main(argv=None):
         help="TUSZ EDF -> shared standard-19 10-second H5 segments in microvolts",
     )
     p.add_argument("--edf-root", required=True); p.add_argument("--output", required=True)
+    p.add_argument(
+        "--partition",
+        help="Optional single partition below EDF_ROOT, for example train",
+    )
     p.add_argument("--workers", type=int, default=1); p.add_argument("--max-subjects", type=int)
     p = sub.add_parser("features", help="Extract early/middle/last numerical features", add_help=False)
     p = sub.add_parser("summaries", help="Render numerical summaries", add_help=False)
@@ -31,6 +35,7 @@ def main(argv=None):
     for name in ("processed", "summaries", "captions", "output"):
         p.add_argument("--" + name, required=True)
     p.add_argument("--numeric-only", action="store_true"); p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--calibration")
     p = sub.add_parser(
         "rule-qa",
         help="Export deterministic EEG signal-property QA without captions or an LLM",
@@ -38,8 +43,33 @@ def main(argv=None):
     p.add_argument("--processed", required=True)
     p.add_argument("--summaries", required=True)
     p.add_argument("--output", required=True)
-    p.add_argument("--require-bin-consistency", action="store_true")
-    p.add_argument("--min-margin", type=float, default=0.10)
+    p.add_argument("--calibration")
+    p = sub.add_parser(
+        "fit-qa-calibration",
+        help="Fit four rule-QA thresholds on TUSZ training feature H5 files",
+    )
+    p.add_argument("--features-root", required=True)
+    p.add_argument("--processed-root", required=True)
+    p.add_argument("--output", required=True)
+    p.add_argument("--base-calibration")
+    p.add_argument("--overwrite", action="store_true")
+    p = sub.add_parser(
+        "encoder-manifest",
+        help="Aggregate train/dev/eval rule QA into one-window 25-label rows",
+    )
+    p.add_argument("--train-qa", required=True)
+    p.add_argument("--val-qa", required=True)
+    p.add_argument("--test-qa", required=True)
+    p.add_argument("--output", required=True)
+    p.add_argument("--allow-incomplete-train-coverage", action="store_true")
+    p = sub.add_parser(
+        "stage-manifests",
+        help="Build strict Stage-2 EEG-QA and Stage-3 EEG+image training JSONL",
+    )
+    p.add_argument("--split", required=True, choices=("train", "val", "test"))
+    p.add_argument("--rule-qa", required=True)
+    p.add_argument("--cerebragloss-root", required=True)
+    p.add_argument("--output-dir", required=True)
     for command in ("train", "evaluate"):
         p = sub.add_parser(command); p.add_argument("--config", required=True)
     p = sub.add_parser("export", help="Export trusted research encoder and final adapter")
@@ -71,7 +101,13 @@ def main(argv=None):
         parser.error("unrecognized arguments: " + " ".join(rest))
     if args.command == "preprocess":
         from .preprocessing.run import run
-        run(args.edf_root, args.output, args.workers, args.max_subjects)
+        run(
+            args.edf_root,
+            args.output,
+            args.workers,
+            args.max_subjects,
+            partition=args.partition,
+        )
     elif args.command == "source-artifacts":
         from .features.source_artifacts import build_source_artifacts
         from .io import load_config
@@ -85,15 +121,50 @@ def main(argv=None):
         print(json.dumps(verify_captions(args.captions)))
     elif args.command == "prepare":
         from .data.prepare import prepare
-        print(prepare(args.processed, args.summaries, args.captions, args.output, not args.numeric_only, args.seed))
+        print(prepare(
+            args.processed,
+            args.summaries,
+            args.captions,
+            args.output,
+            not args.numeric_only,
+            args.seed,
+            args.calibration,
+        ))
     elif args.command == "rule-qa":
         from .data.rule_qa import export_rule_qa
         print(json.dumps(export_rule_qa(
             args.processed,
             args.summaries,
             args.output,
-            require_bin_consistency=args.require_bin_consistency,
-            min_margin=args.min_margin,
+            calibration_path=args.calibration,
+        ), indent=2))
+    elif args.command == "fit-qa-calibration":
+        from .data.fit_calibration import fit_rule_calibration
+        print(json.dumps(fit_rule_calibration(
+            args.features_root,
+            args.processed_root,
+            args.output,
+            base_calibration=args.base_calibration,
+            overwrite=args.overwrite,
+        ), indent=2))
+    elif args.command == "encoder-manifest":
+        from .data.encoder_manifest import build_encoder_manifest
+        print(json.dumps(build_encoder_manifest(
+            args.train_qa,
+            args.val_qa,
+            args.test_qa,
+            args.output,
+            allow_incomplete_train_coverage=(
+                args.allow_incomplete_train_coverage
+            ),
+        ), indent=2))
+    elif args.command == "stage-manifests":
+        from .data.stage_manifests import build_stage_manifests
+        print(json.dumps(build_stage_manifests(
+            args.split,
+            args.rule_qa,
+            args.cerebragloss_root,
+            args.output_dir,
         ), indent=2))
     elif args.command in {"train", "evaluate"}:
         from .io import load_config

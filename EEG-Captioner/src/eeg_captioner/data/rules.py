@@ -4,6 +4,7 @@ import random
 from collections import defaultdict
 
 from eeg_captioner.channels import EEG_CAPTIONER_MODEL_CHANNELS
+from eeg_captioner.data.calibration import RuleCalibration
 
 PERIODS = ("early", "middle", "last")
 
@@ -130,8 +131,9 @@ def required_channels(question):
     return frozenset(ROI_CHANNELS[question["roi"]])
 
 
-def script_answer(question, features, min_margin):
+def script_answer(question, features, calibration: RuleCalibration):
     """Return (label, rejection_reason) for one EEG-question combination."""
+    min_margin = calibration.min_margin
     needed = required_channels(question)
     if not needed.issubset(features["valid_channels"]) or needed & features["bad_channels"]:
         return None, "bad_channel"
@@ -173,7 +175,7 @@ def script_answer(question, features, min_margin):
                 return None, "nan"
             values.append(value)
         first, second = values[1] - values[0], values[2] - values[1]
-        tau = question["threshold"]
+        tau = calibration.threshold("temporal_pattern", band)
         if first > tau and second > tau:
             return "continuously increases", None
         if first < -tau and second < -tau:
@@ -189,7 +191,7 @@ def script_answer(question, features, min_margin):
     value = features["lateralization"].get(key)
     if value is None or not math.isfinite(value):
         return None, "unavailable_pair"
-    tau = question["threshold"]
+    tau = calibration.threshold("lateral_dominance", band)
     return (
         "right" if value > tau else "left" if value < -tau else "approximately symmetric",
         None,

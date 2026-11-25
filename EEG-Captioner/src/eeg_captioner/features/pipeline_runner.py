@@ -44,6 +44,21 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="EEG feature extraction pipeline.")
     parser.add_argument("--config", required=True, help="Path to YAML config.")
     parser.add_argument(
+        "--input-root",
+        default=None,
+        help="Override input_root from YAML (useful for server data locations).",
+    )
+    parser.add_argument(
+        "--output-root",
+        default=None,
+        help="Override output_root from YAML (useful for server run directories).",
+    )
+    parser.add_argument(
+        "--disable-source-network",
+        action="store_true",
+        help="Disable optional source-network features; rule QA does not use them.",
+    )
+    parser.add_argument(
         "--bad-channel",
         action="store_true",
         help="Enable bad-channel detection (overrides bad_channel.enabled in YAML).",
@@ -81,6 +96,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def apply_cli_overrides(config: Dict[str, Any], args: argparse.Namespace) -> Dict[str, Any]:
+    if args.input_root is not None:
+        config["input_root"] = args.input_root
+    if args.output_root is not None:
+        config["output_root"] = args.output_root
     if args.max_files is not None:
         config["max_files"] = args.max_files
     if args.overwrite:
@@ -89,6 +108,12 @@ def apply_cli_overrides(config: Dict[str, Any], args: argparse.Namespace) -> Dic
         bad_channel = dict(config.get("bad_channel") or {})
         bad_channel["enabled"] = True
         config["bad_channel"] = bad_channel
+    if args.disable_source_network:
+        features = dict(config.get("features") or {})
+        source_network = dict(features.get("source_network") or {})
+        source_network["enabled"] = False
+        features["source_network"] = source_network
+        config["features"] = features
     config["num_shards"] = args.num_shards
     config["shard_index"] = args.shard_index
     config["progress_every"] = args.progress_every

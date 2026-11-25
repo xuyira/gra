@@ -94,6 +94,9 @@ def _save(path, model, optimizer, step, config, best_score, manifest_hash):
 
 def train(config):
     config = dict(config)
+    if config.get("stage") in {"eeg_projector_alignment", "multimodal_sft"}:
+        from .staged_engine import train_language_stage
+        return train_language_stage(config)
     rank = int(os.environ.get("RANK", 0)); world = int(os.environ.get("WORLD_SIZE", 1))
     local_rank = int(os.environ.get("LOCAL_RANK", 0))
     cuda = config.get("device", "cuda" if torch.cuda.is_available() else "cpu").startswith("cuda")

@@ -9,6 +9,7 @@ from eeg_captioner.models.spectral import FixedWelchPSD
 from eeg_captioner.models.heads import TaskSpecificQueryDecoders
 from eeg_captioner.models.projector import AtomicEEGProjector, weighted_causal_token_loss
 from eeg_captioner.data.dataset import load_eeg, load_manifest
+from eeg_captioner.data.calibration import load_rule_calibration
 from eeg_captioner.data.rules import MODEL_CHANNELS, script_answer
 from eeg_captioner.evaluation.caption_metrics import caption_overlap_metrics, corpus_bleu
 from eeg_captioner.io import read_jsonl, write_jsonl
@@ -69,6 +70,63 @@ def test_split_leakage_rejected(tmp_path):
         load_manifest(path)
 
 
+def test_encoder_manifest_from_rule_qa(tmp_path, questions):
+    from eeg_captioner.data.encoder_manifest import build_encoder_manifest
+
+    def write_split(split, count):
+        qa_path = tmp_path / f"{split}_rule_qa.jsonl"
+        rows = []
+        for sample_index in range(count):
+            segment_id = f"{split}_subject__record__seg{sample_index:04d}"
+            common = {
+                "segment_id": segment_id,
+                "raw_segment_id": f"record__seg{sample_index:04d}",
+                "eeg_path": f"processed/{split}_subject.h5",
+                "summary_path": f"summaries/{segment_id}.md",
+                "trial_index": sample_index,
+                "start_sample": 0,
+                "source_path": f"{split}/record.edf",
+                "seizure_label": sample_index % 2,
+                "seizure_fraction": 0.2 if sample_index % 2 else 0.0,
+            }
+            rows.append(
+                {
+                    **common,
+                    "question_id": "tusz_seizure_presence",
+                    "question_type": "seizure_presence",
+                    "head_index": None,
+                    "answer_index": 0 if sample_index % 2 else 1,
+                }
+            )
+            for head, question in enumerate(questions):
+                answer_index = sample_index % len(question["options"])
+                rows.append(
+                    {
+                        **common,
+                        "question_id": question["id"],
+                        "question_type": question["type"],
+                        "head_index": head,
+                        "answer_index": answer_index,
+                    }
+                )
+        write_jsonl(qa_path, rows)
+        return qa_path
+
+    train_qa = write_split("train", 5)
+    val_qa = write_split("val", 1)
+    test_qa = write_split("test", 1)
+    output = tmp_path / "encoder/manifest.jsonl"
+    metadata = build_encoder_manifest(train_qa, val_qa, test_qa, output)
+    rows = load_manifest(output)
+    assert metadata["splits"] == {"train": 5, "val": 1, "test": 1}
+    assert metadata["missing_train_classes"] == []
+    assert len(rows) == 7
+    assert all(len(row["labels"]) == 25 for row in rows)
+    assert all("caption" not in row for row in rows)
+    assert {row["split"] for row in rows} == {"train", "val", "test"}
+    assert {row["seizure_label"] for row in rows} == {0, 1}
+
+
 def test_caption_metrics():
     text = "Alpha power increases in the early interval."
     assert caption_overlap_metrics(text, text)["rouge_l_f1"] == 1
@@ -92,5 +150,5 @@ def test_label_ambiguity(questions):
     features = {"valid_channels": set(MODEL_CHANNELS), "bad_channels": set(),
                 "absolute": {(q["period"], q["roi"]): dict(delta=10, theta=9.9, alpha=1, beta=1, gamma=1)},
                 "relative": {}, "lateralization": {}}
-    assert script_answer(q, features, 0.1)[0] is None
+    assert script_answer(q, features, load_rule_calibration())[0] is None
 

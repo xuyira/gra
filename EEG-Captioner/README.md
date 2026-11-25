@@ -122,6 +122,7 @@ teacher captions, run:
 eeg-captioner rule-qa \
   --processed data/processed \
   --summaries data/summaries \
+  --calibration configs/qa_calibration.tusz_train.json \
   --output data/rule_qa.jsonl
 ```
 

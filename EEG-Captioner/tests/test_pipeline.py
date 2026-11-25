@@ -12,13 +12,23 @@ from eeg_captioner.io import write_jsonl, read_jsonl
 
 def make_h5(path, trials=1, sample_rate=200, seizure_intervals=None):
     rng = np.random.default_rng(72)
-    signal = rng.normal(0, 5, (trials, 20, 2000)).astype(np.float32)
+    signal = rng.normal(0, 5, (trials, 19, 2000)).astype(np.float32)
     signal += 12 * np.sin(2 * np.pi * 10 * np.arange(2000) / 200)[None, None, :]
     with h5py.File(path, "w") as f:
         f.attrs["sample_rate"] = sample_rate
+        f.attrs["presegmented_10s"] = True
+        f.attrs["segment_duration_sec"] = 10.0
+        f.attrs["reference_scheme"] = "average"
+        f.attrs["preprocess_log"] = json.dumps({
+            "bandpass_hz": [1.6, 70.0],
+            "notch_hz": [60.0],
+            "resample_to_hz": 200.0,
+        })
         f["data"] = signal
-        f["channels"] = np.asarray(MODEL_CHANNELS, dtype="S")
-        f["trial_ids"] = np.asarray([f"trial{i}" for i in range(trials)], dtype="S")
+        f["channels"] = np.asarray(STANDARD_19_CHANNELS, dtype="S")
+        segment_ids = [f"trial{i}__seg0000" for i in range(trials)]
+        f["trial_ids"] = np.asarray(segment_ids, dtype="S")
+        f["segment_ids"] = np.asarray(segment_ids, dtype="S")
         f["source_paths"] = np.asarray(["synthetic.edf"] * trials, dtype="S")
         f["trial_lengths_in_samples"] = [2000] * trials
         if seizure_intervals is not None:
@@ -29,6 +39,22 @@ def make_h5(path, trials=1, sample_rate=200, seizure_intervals=None):
                     padded[trial_index, :len(intervals)] = intervals
             f["seizure_interval_count"] = counts
             f["seizure_intervals_sec"] = padded
+            fractions = np.asarray(
+                [
+                    min(
+                        sum(
+                            max(0.0, min(10.0, stop) - max(0.0, start))
+                            for start, stop in intervals
+                        ),
+                        10.0,
+                    )
+                    / 10.0
+                    for intervals in seizure_intervals
+                ],
+                dtype=np.float32,
+            )
+            f["seizure_fraction"] = fractions
+            f["seizure_label"] = (fractions >= 0.15).astype(np.int8)
 
 
 def test_preprocess_filters_units_and_h5(tmp_path, monkeypatch):
@@ -146,6 +172,15 @@ def test_features_summary_manifest(tmp_path, archived):
     config["input_root"] = str(raw); config["output_root"] = str(tmp_path / "features")
     config["features"]["source_network"]["enabled"] = False
     run_pipeline(config)
+    from eeg_captioner.data.fit_calibration import fit_rule_calibration
+    calibration_path = tmp_path / "qa_calibration.fitted.json"
+    calibration_result = fit_rule_calibration(
+        tmp_path / "features", raw, calibration_path
+    )
+    assert calibration_result["fit"]["status"] == "fitted"
+    assert calibration_result["fit"]["patients"] == 3
+    assert set(calibration_result["rules"]["temporal_pattern"]) == {"alpha", "gamma"}
+    assert set(calibration_result["rules"]["lateral_dominance"]) == {"delta", "gamma"}
     with h5py.File(tmp_path / "features/s0.h5", "r") as f:
         assert f["meta/seizure_label"][:].tolist() == [[1]]
         np.testing.assert_allclose(f["meta/seizure_overlap_sec"][:], [[5.0]])
@@ -161,11 +196,29 @@ def test_features_summary_manifest(tmp_path, archived):
     assert len(summaries) == 3
     from eeg_captioner.data.rule_qa import export_rule_qa
     qa_path = tmp_path / "rule_qa.jsonl"
-    qa_metadata = export_rule_qa(raw, tmp_path / "summaries", qa_path)
+    qa_metadata = export_rule_qa(
+        raw,
+        tmp_path / "summaries",
+        qa_path,
+        calibration_path=calibration_path,
+    )
     qa_rows = read_jsonl(qa_path)
     assert qa_metadata["segments_seen"] == 3
+    assert qa_metadata["questions_per_segment"] == 26
+    assert qa_metadata["calibration_id"]
+    assert len(qa_metadata["calibration_sha256"]) == 64
     assert qa_metadata["qa_examples"] == len(qa_rows) > 0
-    assert all(row["annotation_source"] == "eeg_captioner_rule" for row in qa_rows)
+    seizure_rows = [row for row in qa_rows if row["question_type"] == "seizure_presence"]
+    assert len(seizure_rows) == 3
+    assert {row["answer_label"] for row in seizure_rows} == {
+        "Yes", "No"
+    }
+    assert all(row["head_index"] is None for row in seizure_rows)
+    assert all(
+        row["annotation_source"] in {"eeg_captioner_rule", "tusz_seizure_annotation"}
+        for row in qa_rows
+    )
+    assert all("bin_consistent" not in row for row in qa_rows)
     assert all(row["answer_label"] in row["options"] for row in qa_rows)
     assert all(row["answer_index"] == row["options"].index(row["answer_label"]) for row in qa_rows)
     captions = tmp_path / "captions"; captions.mkdir()

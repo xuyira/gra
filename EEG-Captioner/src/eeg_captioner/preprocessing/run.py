@@ -47,14 +47,29 @@ def process_subject(task):
     return {"subject": subject.name, "results": results, "header_errors": errors}
 
 
-def run(edf_root, output, workers=1, max_subjects=None):
+def run(edf_root, output, workers=1, max_subjects=None, partition=None):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
-    subjects = tueg.discover_subjects(edf_root)
+    if partition is None:
+        subjects = tueg.discover_subjects(edf_root)
+    else:
+        partition_root = Path(edf_root) / str(partition)
+        if not partition_root.is_dir():
+            raise ValueError(f"Missing requested TUSZ partition: {partition_root}")
+        subjects = [
+            str(path)
+            for path in sorted(partition_root.iterdir())
+            if path.is_dir()
+        ]
     if max_subjects is not None:
         subjects = subjects[:max_subjects]
     if not subjects:
-        raise ValueError("Expected EDF_ROOT/partition/subject/session/montage/*.edf")
+        expected = (
+            "EDF_ROOT/partition/subject/session/montage/*.edf"
+            if partition is None
+            else f"EDF_ROOT/{partition}/subject/session/montage/*.edf"
+        )
+        raise ValueError(f"Expected {expected}")
     if len({Path(s).name for s in subjects}) != len(subjects):
         raise ValueError("Duplicate subject IDs across partitions would overwrite H5 files")
     tasks = [(s, str(output)) for s in subjects]

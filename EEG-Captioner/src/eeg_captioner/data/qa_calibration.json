@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "calibration_id": "legacy_seed_for_tusz_avgref_1p6_70",
+  "data_contract": {
+    "dataset": "TUSZ",
+    "split": "train",
+    "reference_scheme": "average",
+    "bandpass_hz": [1.6, 70.0],
+    "notch_hz": [60.0],
+    "sample_rate_hz": 200.0,
+    "segment_duration_sec": 10.0,
+    "feature_analysis_range_hz": [1.6, 45.0],
+    "bands": {
+      "delta": [1.6, 4.0],
+      "theta": [4.0, 8.0],
+      "alpha": [8.0, 13.0],
+      "beta": [13.0, 30.0],
+      "gamma": [30.0, 45.0]
+    }
+  },
+  "rules": {
+    "min_margin": 0.1,
+    "temporal_pattern": {
+      "alpha": 0.025034739999999986,
+      "gamma": 0.004109362000000002
+    },
+    "lateral_dominance": {
+      "delta": 0.1165993333333333,
+      "gamma": 0.08368776666666666
+    }
+  },
+  "fit": {
+    "status": "seed",
+    "source": "legacy EEG-Captioner question thresholds",
+    "weighting": null,
+    "quantile": null
+  }
+}

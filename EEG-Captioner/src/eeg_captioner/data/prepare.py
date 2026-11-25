@@ -5,18 +5,28 @@ import json
 from collections import Counter
 import h5py
 from eeg_captioner.io import read_jsonl, write_jsonl, write_json, sha256
+from .calibration import load_rule_calibration, validate_processed_contract
 from .rules import parse_summary_features, script_answer, split_filenames, MODEL_CHANNELS
 from .binning import Thresholds, audit_case
 from .summaries import SEGMENT_STEM, segment_summaries
 from .captions import iter_captions
 
 
-def prepare(processed, summaries, captions, output, bin_consistency=True, seed=42):
+def prepare(
+    processed,
+    summaries,
+    captions,
+    output,
+    bin_consistency=True,
+    seed=42,
+    calibration_path=None,
+):
     processed, summaries, captions, output = map(Path, (processed, summaries, captions, output))
     questions_path = Path(__file__).with_name("questions_25.jsonl")
     thresholds_path = Path(__file__).with_name("bin_thresholds.json")
     questions = read_jsonl(questions_path)
     thresholds = Thresholds(thresholds_path)
+    calibration = load_rule_calibration(calibration_path)
     rows, rejected = [], Counter()
     cap_map = {}
     for key, text in iter_captions(captions):
@@ -30,6 +40,7 @@ def prepare(processed, summaries, captions, output, bin_consistency=True, seed=4
             rejected["missing_caption"] += 1
             continue
         if raw not in metadata:
+            validate_processed_contract(raw, calibration)
             with h5py.File(raw, "r") as f:
                 decode = lambda v: v.decode() if isinstance(v, bytes) else str(v)
                 trials = [decode(v) for v in f["trial_ids"][:]]
@@ -64,7 +75,7 @@ def prepare(processed, summaries, captions, output, bin_consistency=True, seed=4
         features = parse_summary_features(p)
         labels = []
         for h, q in enumerate(questions):
-            label, reason = script_answer(q, features, 0.10)
+            label, reason = script_answer(q, features, calibration)
             if label is not None and bin_consistency:
                 case = {**q, "answer_label": label, "question_id": f"q{h + 1:04d}"}
                 result = audit_case(case, features, thresholds)
@@ -93,6 +104,8 @@ def prepare(processed, summaries, captions, output, bin_consistency=True, seed=4
         "splits": dict(Counter(r["split"] for r in rows)),
         "label_filter": "numeric_and_bin_consistency" if bin_consistency else "numeric_only",
         "questions_sha256": sha256(questions_path), "thresholds_sha256": sha256(thresholds_path),
+        "calibration_id": calibration.calibration_id,
+        "calibration_sha256": calibration.file_sha256,
         "rejections": dict(rejected), "eeg_units": "microvolts", "model_scale": 100.0,
         "note": "Filename-disjoint, not necessarily subject-disjoint when a subject has multiple H5 files."})
     return len(rows)
