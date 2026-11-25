@@ -1,0 +1,1082 @@
+{
+    "91_av.npy": {
+        "conversation": [
+            "**User:** I find a few sporadic sharp waves and spikes in the last 5 seconds. Are those of any concern?",
+            "**Agent:** The transients you mentioned occur where we see periods of severe artifact and electrode instability. This direct correlation strongly suggests that these sharp-appearing waveforms are artifact-induced rather than being true epileptiform discharges."
+        ],
+        "selection": [
+            "This EEG segment contains several sharp transients in the last 5 seconds. How are they best characterized?\n\nA) Rhythmic and focal to the right parietal region.\nB) Generalized spike-and-wave.\nC) Sporadic and multifocal.\nD) Artifactual, extremely high amplitude.",
+            "**D.** The recording shows extreme amplitude in the first few seconds, consistent with artifact."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the recording being significantly limited by widespread artifact, particularly during the first five seconds. The latter half of the segment, which is less obscured, shows intermittent 1.3 Hz delta activity over the frontopolar and right parietal regions. Due to the pervasive artifact, the diagnostic interpretation of this segment is significantly compromised.",
+        "is_expert_annotated": true
+    },
+    "166_av.npy": {
+        "conversation": [
+            "**User:** A persistent delta background is certainly noteworthy. Is this an ictal pattern?",
+            "**Agent:** It does not have the typical evolution in frequency or morphology of a seizure. Rather, this appears to be a highly organized background rhythm."
+        ],
+        "selection": [
+            "What is the most significant and pervasive feature of the background activity in this EEG segment?\n\nA) A well-organized posterior dominant alpha rhythm.\nB) Generalized polymorphic delta activity.\nC) Sporadic multifocal sharp waves.\nD) Rhythmic beta activity in the frontal leads.",
+            "**B.** The background is composed of continuous, diffuse delta activity throughout the recording."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background consists predominantly of diffuse, medium-amplitude delta activity at approximately 2.4 Hz. No definite epileptiform discharges or physiological sleep waves are observed. It may be drowsing slow activity or in NREM3.",
+        "is_expert_annotated": true
+    },
+    "34_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this 10-second segment?",
+            "**Agent:** This segment appears to be from an awake patient. It shows a stable background dominated by a low-amplitude, approximately 14-15 Hz beta rhythm. The most notable feature is a consistent interhemispheric amplitude and frequency asymmetry. The background activity in the left hemisphere, particularly over the frontal and temporal regions, is consistently higher in voltage and slower in frequency than on the right. I don't see any epileptiform discharges or sleep-related activity."
+        ],
+        "selection": [
+            "Which of the following statements about the background rhythm presented in this segment is correct?\n\nA) Generalized theta rhythm.\nB) Significant muscle artifact obscuring interpretation.\nC) Amplitude asymmetry with higher voltage on the left frontal and temporal regions.\nD) Intermittent right-sided epileptiform discharges.",
+            "**C.** The segment is characterized by a stable background rhythm that demonstrates consistently higher amplitude over the left hemisphere compared to the right."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, with some focal low-voltage activity noted in the central midline region between 2.8 and 6.0 seconds and minor high-frequency muscle artifact over the frontopolar leads. The background activity is stable and predominantly composed of low-amplitude beta activity at approximately 14.6 Hz. A persistent interhemispheric asymmetry is present, characterized by consistently higher amplitudes over the left frontal and temporal regions compared to their homologous right-sided counterparts, as well as slower frequencies over the left temporal region. No definite epileptiform discharges or physiological sleep waves are identified in this segment.",
+        "is_expert_annotated": true
+    },
+    "120_av.npy": {
+        "conversation": [
+            "**User:** I note many artifacts. Are there any other discharges that are not related to the artifacts?",
+            "**Agent:** No. Given the severe artifact originating from the FP region between 3-9 seconds, the interpretability of the entire segment is poor, and no definitive independent discharges can be identified."
+        ],
+        "selection": [
+            "What is the most likely cause of the waves between 5 and 7 seconds in FZ channel?\n\nA) A well-formed 9 Hz posterior dominant theta rhythm.\nB) A 7-8 Hz theta rhythm.\nC) Epileptiform discharge.\nD) Sharp transients of artifactual origin",
+            "**D.** Severe artifact in the FP region between 3-9 seconds led to sharp transients appearing simultaneously on other channels."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system, using an average reference. The data quality is fair, with significant interference from artifacts. Persistent high-frequency noise is noted, particularly in the bitemporal regions. Severe artifacts are present between 3 and 9 seconds, generating sharp transients that mimic epileptiform discharges in other channels. Overall, the segment shows sporadic frontal epileptiform activity within a recording partially obscured by artifact.",
+        "is_expert_annotated": true
+    },
+    "122_av.npy": {
+        "conversation": [
+            "**User:** Can you elaborate on the epileptiform discharges in this segment?",
+            "**Agent:** Certainly. Early in the recording, there are clusters of spikes localized to the left temporal region at around 0s, 1s and 2s. Then, much later in the segment, a separate and distinct group of spikes appears over the right temporal area at around 8.7s. Their separation in time and distinct locations suggest two independent foci of irritability."
+        ],
+        "selection": [
+            "What is the most accurate description of the epileptiform activity seen in this segment?\n\nA) A single, well-defined left temporal seizure focus.\nB) Generalized spike-and-wave discharges.\nC) Focal, independent epileptiform discharges.\nD) Benign Rolandic spikes.",
+            "**C.** The EEG shows distinct sharp waves and spikes occurring independently in both the left (F7/T3/T5) and right (F8/T4) temporal regions, which is the key finding."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Sporadic independent spikes occur over the left anterior temporal region (F7, T3, T5) at ~0, 1, and 2s; and the right temporal region (F8, T4, T6) at ~8.7s.",
+        "is_expert_annotated": true
+    },
+    "139_av.npy": {
+        "conversation": [
+            "**User:** What's your initial take on this 10-second segment?",
+            "**Agent:** The data quality is fair, with some persistent muscle artifact noted, particularly in the frontotemporal regions. However, the more salient feature is a pattern of focal, sporadic spikes, which are most evident in the bilateral frontal and temporal regions."
+        ],
+        "selection": [
+            "This EEG segment shows sporadic discharges. What is their most accurate localization?\n\nA) Primarily midline and parasagittal.\nB) Focal to the right hemisphere, with a field involving posterior and anterior regions.\nC) Focal to the left temporal lobe.\nD) Diffusely distributed over the occipital, frontal, and temporal regions.",
+            "**D.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with some interference from high-frequency muscle artifact observed persistently in the bilateral frontal and temporal regions. Sporadic sharp waves are observed diffusely throughout the brain, with maximum prominence over the frontal (F) and occipital (O) regions. This finding is indicative of generalized epilepsy process.",
+        "is_expert_annotated": true
+    },
+    "51_av.npy": {
+        "conversation": [
+            "**User:** I see many artifacts in this segment. Is there any discernible cerebral activity underneath all the noise? I thought I saw some frontal slowing.",
+            "**Agent:** That's a good observation. However, The slow waves in the frontal region are synchronous with the rapid eye blink artifact, confirming that this is in fact an ocular artifact."
+        ],
+        "selection": [
+            "The interpretation of this EEG segment is limited by artifact. Which of the following best describes the predominant features?\n\nA) Frontal intermittent rhythmic delta activity suggesting encephalopathy.\nB) Widespread high-frequency muscle artifact and frequent slow-wave artifact in the frontal leads consistent with eye movements.\nC) A low-voltage, suppressed background with intermittent sharp waves.\nD) A clear posterior dominant rhythm intermittently obscured by electrode artifact.",
+            "**B.** The recording is contaminated by diffuse, high-frequency muscle artifact and large-amplitude, rhythmic slow waves in the frontal channels, characteristic of eye blinks, which obscure the underlying cerebral activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal severely contaminated by artifacts. Persistent, high-frequency muscle artifact is observed across bilateral fronto-temporal, central, parietal, and occipital regions, while frequent eye blink artifacts are present in the frontopolar leads. The overall background of this segment is low-amplitude beta rhythm. No definite epileptiform discharges or physiological sleep waves are observed.",
+        "is_expert_annotated": true
+    },
+    "173_av.npy": {
+        "conversation": [
+            "**User:** Can you elaborate on those spike-and-slow-wave complexes waves detected in this segment?",
+            "**Agent:** Certainly. Around 2s, spike-and-slow-wave complexes are observed over the midline regions, most obvious on channel PZ and CZ. Other channels exhibit a dipole-like distribution pattern, with positive deflections over the right-sided channels and negative deflections over some left-sided channels. This pattern repeats at 6s and 8.5s."
+        ],
+        "selection": [
+            "Which of the following statements is incorrect?\n\nA) No spike-and-slow-wave complexes appear.\nB) Sharp waves on multiple channels come from left and right dipoles.\nC) A large number of eye movement artifacts exist.\nD) There is no obvious delta rhythm.",
+            "**A.** Spike-and-slow-wave complexes are observed over the midline regions around 2s, 6s, 8s."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Around 2 seconds, spike-and-slow-wave complexes are observed over the midline regions. Other channels exhibit a dipole-like distribution pattern, with positive sharp waves over the right-sided channels and negative sharp waves over some left-sided channels. This pattern repeats at 6 seconds and 8.5 seconds. The background activity is composed of low-amplitude delta, characterized by clear evidence of epileptiform discharges.",
+        "is_expert_annotated": true
+    },
+    "179_av.npy": {
+        "conversation": [
+            "**User:** What is the special activity from 1 to 8s?",
+            "**Agent:** Periodic sharp waves, spike waves, and spike-and-slow-wave complexes are observed, with a frequency of approximately 2 Hz."
+        ],
+        "selection": [
+            "Which best describes this EEG?\n\nA) Posterior alpha waves.\nB) Periodic epileptiform discharges.\nC) Noise contamination.\nD) NREM3.",
+            "**B.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. From 1 to 8 seconds, periodic sharp waves, spike waves, and spike-and-slow-wave complexes are observed, with a frequency of approximately 2 Hz.",
+        "is_expert_annotated": true
+    },
+    "12_av.npy": {
+        "conversation": [
+            "**User:** What is your initial analysis of this 10-second EEG?",
+            "**Agent:** This segment shows a stable background with good technical quality. The most prominent feature is persistent, generalized delta activity with a frequency of approximately 1.5-2 Hz, most notable in the frontal and temporal regions. I do not see any definite epileptiform discharges."
+        ],
+        "selection": [
+            "This EEG segment is best characterized by which of the following patterns?\n\nA) NREM Stage 2 sleep.\nB) A well-formed posterior dominant alpha rhythm.\nC) Repetitive epileptiform discharges.\nD) Generalized polymorphic delta activity.",
+            "**D.** The recording shows a stable background of continuous, widespread slow activity in the delta frequency range, without clear epileptiform discharges or organized sleep features. This pattern is consistent with generalized polymorphic delta activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference, and the overall data quality is good. The background activity is stable and predominantly composed of low-amplitude, generalized delta activity at approximately 2.2 Hz. Superimposed on this background are more prominent, medium-amplitude (~40.9 \u03bcV) delta waves at 1.7 Hz, observed diffusely across bilateral frontal, temporal, and occipital regions, as well as the frontal midline. No definite epileptiform discharges or physiological sleep waves are identified. The findings are characterized by a generalized delta rhythm.",
+        "is_expert_annotated": true
+    },
+    "152_av.npy": {
+        "conversation": [
+            "**User:** Can you give me an initial impression of this segment?",
+            "**Agent:** Certainly. This segment is notable for its slow and disorganized background, which is predominantly composed of theta and delta activity. In addition, there are intermittent sharp waves present."
+        ],
+        "selection": [
+            "This segment displays sporadic sharp waves. How would you best describe their distribution?\n\nA) Generalized\nB) Left temporal\nC) Predominantly bifrontal\nD) Occipital",
+            "**C.** The sharp waves are seen with highest amplitude in the frontal leads bilaterally, indicating a bifrontal field."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Sporadic sharp waves are noted in the bilateral and midline frontal regions, occurring between 3.0-3.5 seconds and 4.1-4.6 seconds, with another event in the midline frontal region from 7.0-7.6 seconds. The background is composed of medium-amplitude theta activity, with intermittent, medium-amplitude delta activity observed from 3.0 seconds onward, most prominently in the frontal, temporal, and occipital lobes.",
+        "is_expert_annotated": true
+    },
+    "36_av.npy": {
+        "conversation": [
+            "**User:** I am noting the presence of delta activity in the frontal and occipital regions. Could these be associated with epilepsy, or are they concerning?",
+            "**Agent:** That's an important point to clarify. The delta activity appear to be artifactual. They occur simultaneously with the prominent eye blinks seen in the frontal channels. This is a common finding where blink artifacts can be misinterpreted as sharp waves or delta activity, especially in an average reference montage."
+        ],
+        "selection": [
+            "Regarding the waveforms resembling delta activity observed in F4, FZ, O1, and O2, which of the following descriptions is correct?\n\nA) They are continuous sharp wave discharges.\nB) They are artifacts generated by eye blinks.\nC) They are benign vertex sharp waves characteristic of NREM sleep.\nD) They are  generated by structural brain damage.",
+            "**B.** The delta activity occurs simultaneously with eye movements seen in the frontopolar leads."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, though the recording is significantly affected by various artifacts. Frequent eye blink artifacts are present, which are temporally correlated with the delta activity in the bilateral frontal and occipital regions. Persistent high-frequency muscle artifact is noted, predominantly over the temporal areas. These findings are consistent with a relaxed wakefulness, with the recording significantly contaminated by myogenic and ocular artifacts.",
+        "is_expert_annotated": true
+    },
+    "92_av.npy": {
+        "conversation": [
+            "**User:** What's your overall assessment of this segment?",
+            "**Agent:** My initial assessment is that this is a challenging segment to interpret due to significant artifact, particularly over the posterior head regions. The most significant finding, aside from the artifacts, is a background composed of beta and theta activity. This slow-wave activity warrants further evaluation."
+        ],
+        "selection": [
+            "What is the most striking eature of this EEG segment?\n\nA) Focal polymorphic delta activity over the left hemisphere.\nB) Severe artifact on channel P3, P4, O1, O2, T6, PZ.\nC) A well-organized posterior dominant alpha rhythm.\nD) Generalized background slowing without focal features.",
+            "**B.** This segment is severely contaminated by various artifacts, including muscle artifact and high-frequency noise."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair. There is significant interference from electrode and muscle artifact, particularly in the bilateral temporal, parietal, and occipital regions. High-frequency noise is persent, obscuring all channels between 3-6 seconds. The remaining background activity is primarily composed of 12 Hz beta activity and 5 Hz theta rhythms. Due to the pervasive artifact, the diagnostic interpretation of this segment is significantly compromised.",
+        "is_expert_annotated": true
+    },
+    "81_av.npy": {
+        "conversation": [
+            "**User:** What's your overall assessment of this EEG segment?",
+            "**Agent:** This is a good quality recording. The most striking feature is the background, which is dominated by continuous, high-amplitude, generalized delta activity at around 2 Hz."
+        ],
+        "selection": [
+            "What is the most prominent feature of the background activity in this EEG segment?\n\nA) A normal, well-organized posterior dominant rhythm.\nB) A burst-suppression pattern.\nC) Generalized, continuous high-amplitude delta activity.\nD) Sporadic bifrontal sharp waves.",
+            "**C.** The background is composed of continuous, high-amplitude (~90 \u03bcV) delta activity at approximately 1.7-2.0 Hz, which is the most significant and pervasive finding in the segment."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. The background activity is stable and predominantly composed of synchronous, high-amplitude (approximately 85-91 \u03bcV) delta activity at 1.7-2.0 Hz. No definite epileptiform discharges or physiological sleep waves are observed. These finding suggests that this segment was recorded during NREM3.",
+        "is_expert_annotated": true
+    },
+    "178_av.npy": {
+        "conversation": [
+            "**User:** I see some sharp waves are detected. Is there any epileptiform activity here?",
+            "**Agent:** No, I do not see any clear epileptiform activity. The sharp waves you mentioned may only be part of the delta waves."
+        ],
+        "selection": [
+            "What is the most prominent, well-formed electrographic feature present?\n\nA) Multifocal epileptiform discharges.\nB) A burst of generalized spike-and-wave activity.\nC) High-amplitude, diffuse delta activity.\nD) Continuous eye movement artifact.",
+            "**C.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background is characterized by diffuse, high-amplitude delta activity at approximately 1.6 Hz. If this is during sleep, it could be the EEG pattern of Stage N3 sleep.",
+        "is_expert_annotated": true
+    },
+    "148_av.npy": {
+        "conversation": [
+            "**User:** Can you characterize the discharges around the 8-second mark?",
+            "**Agent:** Yes. That event demonstrates an left-right field. There appears to be a negative field over the right temporal region with a corresponding positive field in the right regions. This morphology is suggestive of a focal generator within the left hemisphere."
+        ],
+        "selection": [
+            "This EEG segment contains sporadic discharges. What is the most accurate description of their electrical field?\n\nA) They are consistently focal to the left temporal region.\nB) They are generalized and synchronous across both hemispheres.\nC) The record is too obscured by eye movement artifact to characterize any discharges.\nD) They demonstrate an left-right dipole.",
+            "**D.** The discharges show a negative potential in right regions with a corresponding positive potential in left regions, which is characteristic of an left-right dipole."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. Sporadic sharp and slow wave complexes are observed at the following intervals: 1.0-1.5s, 3.4-4.0s, 5.1-5.8s, 6.1-6.7s, 6.9-7.5s, and 7.9-8.5s. This activity is maximal over the midline parietal region (Pz). It is also seen over the left parietal (P3) and central (C3) regions. Over the left occipital region (O1), the sharp component of the complexes is significantly attenuated, with only the synchronous slow-wave component clearly visible. This finding is consistent with an left-right dipole. The background is composed of stable, diffuse, medium-amplitude delta activity at approximately 1.5-2.2 Hz. The findings are consistent with focal epileptiform discharges on a background of generalized slowing, suggestive of underlying cortical dysfunction.",
+        "is_expert_annotated": true
+    },
+    "73_av.npy": {
+        "conversation": [
+            "**User:** What's your overall impression of this segment?",
+            "**Agent:** The most striking feature here is the emergence of focal, high-amplitude delta activity. It begins around the 4-second mark, localized primarily to the right central and midline frontal regions. In addition to this slowing, there are also some sporadic sharp waves and spikes in the whole brain."
+        ],
+        "selection": [
+            "This EEG segment contains several epileptiform discharges. What is their primary distribution?\n\nA) Bilateral Central.\nB) Focal left temporal.\nC) Widely distributed in the whole brain.\nD) Bilateral occipital.",
+            "**C.** The segment shows sporadic spikes and sharp waves occurring independently and synchronously in the whole brain."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Sporadic sharps and spikes are present in the whole brain. Additionally, focal high-amplitude delta activity at approximately 2.7 Hz is observed in the right central and midline regions during the latter half of the segment. The background activity evolves from a 9.8 Hz alpha rhythm to a 5.1 Hz theta rhythm. These findings are consistent with interictal epileptiform discharges.",
+        "is_expert_annotated": true
+    },
+    "39_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This EEG segment displays epileptiform discharges. Spikes are noted bilarterally in the FP regions at 4.5s. Spikes can also been seen in the left hemisphere at 8.8s."
+        ],
+        "selection": [
+            "This EEG segment displays several abnormalities. What is the most accurate characterization of the epileptiform discharges at 4.5s?\n\nA) The only sharp transients are related to eye blink artifact.\nB) There is a single focus of spikes in the right temporal region.\nC) The discharges are generalized, suggesting a primary generalized epilepsy.\nD) Spikes are noted bilaterally in the FP regions.",
+            "**D.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The recording demonstrates epileptiform discharges. Spikes are noted bilarterally in the FP regions at 4.5s. Spikes can also been seen in the left hemisphere at 8.8s. The background consists of a stable, low-amplitude theta rhythm. In the final second of the recording, evolving to a medium-amplitude 10 Hz alpha rhythm, suggesting an alteration in the patient's level of arousal, possibly indicating emergence from sleep or an obtunded state.",
+        "is_expert_annotated": true
+    },
+    "146_av.npy": {
+        "conversation": [
+            "**User:** Can you elaborate on the sharp and slow wave complexes transients? Are they genuine epileptiform discharges?",
+            "**Agent:** Four bursts of sharp and slow wave complexes are observed in this segment, occurring around 1s, 4s, 5s, and 8s. They are morphologically similar, appearing most prominently over the central (Cz) and parietal (Pz) midlines."
+        ],
+        "selection": [
+            "Which of the following statements is true?\n\nA) Generalized spike-and-wave discharges.\nB) Spike-and-waves maximal in the parietal midline region.\nC) Rhythmic sharp waves in the right occipital region.\nD) The recording is normal, with only artifact present.",
+            "**B.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. Several epileptiform discharges are observed in this segment. There are spike-and-wave complexes at the central (Cz) and parietal (Pz) midlines during 1.0-1.5 s, 3.6-4.0 s, 5.1-5.8 s, and 7.9-8.5 s. Simultaneously, sharp waves can be observed in the left parietal, central, and occipital regions, accompanied by contralateral positive deflection, forming a dipole between the left and right cerebral hemispheres.",
+        "is_expert_annotated": true
+    },
+    "22_av.npy": {
+        "conversation": [
+            "**User:** I see some sharps in the right frontotemporal area around 4s. Can you confirm that?",
+            "**Agent:** I see the sharp transient you're referring to around the 3.7-second mark in the right frontotemporal channels. However, it occurs exactly before sleep spindles. This timing makes it highly likely that the \"sharp\" is actually a part of K-complexes, not a true epileptiform discharge."
+        ],
+        "selection": [
+            "This EEG segment is recorded during sleep. What is the most prominent and defining electrographic feature present?\n\nA) Sawtooth waves\nB) Focal right fronto-temporal spikes\nC) A persistent posterior dominant alpha rhythm\nD) Sleep waves",
+            "**D.** The segment clearly shows well-formed sleep spindles, which are characteristic of NREM stage 2 sleep."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. This segment is characterized by a background of theta to delta frequency and the presence of well-formed sleep spindles bilaterally over the frontal, temporal, and central regions. Sporadic sharp transients are noted in the right frontotemporal channels between 3.5-3.9 seconds; however, their concurrence with spindles suggests they are likely not of epileptiform origin. The findings are consistent with stage NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "67_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This appears to be a non-epileptiform segment recorded during a state of drowsiness. The background is well-regulated, consisting of a mixture of generalized theta and beta activity. The overall data quality is good."
+        ],
+        "selection": [
+            "How would you best characterize the background activity in this segment?\n\nA) A well-organized posterior dominant alpha rhythm, consistent with normal wakefulness.\nB) The background is composed of mixed frequencies, from theta to beta.\nC) NREM stage 2 sleep, with clear sleep spindles and K-complexes.\nD) The recording is obscured by excessive muscle artifact, precluding interpretation.",
+            "**B.** The background is composed of a mixture of frequencies, ranging from theta to beta. Additionally, there is no evidence of a normal alpha rhythm or specific sleep-related waveforms."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. Overall data quality is good. The background activity primarily consists of moderate-amplitude theta rhythms at 6.6 Hz, intermixed with brief bursts of low to moderate-amplitude beta waves lasting approximately 1 second. An interhemispheric asymmetry is present in the background, with consistently higher amplitudes over the right parietal region compared to the left. No definite epileptiform discharges or physiological sleep waves are observed in this segment.",
+        "is_expert_annotated": true
+    },
+    "93_av.npy": {
+        "conversation": [
+            "**User:** Can you characterize the slowing in this segment for me?",
+            "**Agent:** Certainly. The slowing is quite rhythmic, with a frequency of approximately 2 to 2.5 Hz. It is present diffusely across all channels and maintains a consistently high amplitude. This pattern is often referred to as generalized rhythmic delta activity."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature seen in this EEG segment?\n\nA) Generalized rhythmic delta activity\nB) Multifocal sharp waves\nC) Normal posterior dominant alpha rhythm\nD) Prominent eye blink artifact",
+            "**A.** The background is dominated by a stable, high-amplitude, generalized rhythmic delta rhythm at approximately 2.2-2.5 Hz."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background is composed of stable, diffuse, high-amplitude delta activity at approximately 2.5 Hz. No definite epileptiform discharges or physiological sleep waves are observed.",
+        "is_expert_annotated": true
+    },
+    "33_av.npy": {
+        "conversation": [
+            "**User:** T3 and T5 look weird. What happened?",
+            "**Agent:** The left temporal region demonstrates unusual high-amplitude alpha rhythmic activity, which is likely artifactual."
+        ],
+        "selection": [
+            "This EEG segment is best characterized by which of the following findings?\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Prominent beta activity and focal alpha rhythm.\nC) Frequent generalized epileptiform discharges.\nD) Features of NREM stage 2 sleep.",
+            "**B.** The background is composed of a stable rhythm at approximately 15 Hz, which falls within the beta frequency band (>13 Hz) in most channels and alpha rhythm in left temporal regions. No well-organized alpha rhythm, epileptiform discharges, or sleep-related waveforms are present."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, partially limited by persistent high-frequency muscle artifact over the right frontotemporal region and a period of low voltage in the CZ channel from 2.9 to 6.1 seconds. The background activity is stable and predominantly composed of a medium-amplitude beta rhythm at approximately 15 Hz except left temporal regions. The left temporal region demonstrates unusual high-amplitude alpha rhythmic activity, which is likely artifactual. No definite epileptiform discharges or physiological sleep waves are observed. The findings are consistent with a wakeful state, though the interpretation is partially limited by regional artifact.",
+        "is_expert_annotated": true
+    },
+    "95_av.npy": {
+        "conversation": [
+            "**User:** What is your initial analysis of this 10-second segment?",
+            "**Agent:** The segment demonstrates excellent technical quality. The background is dominated by high-voltage delta activity, especially during 1 to 5s. The pattern seems to be drowsing slow activity."
+        ],
+        "selection": [
+            "What is the most significant electrographic feature in this segment?\n\nA) Frequent, high-amplitude epileptiform discharges.\nB) Generalized, symmetric delta activity.\nC) Right hemispheric amplitude suppression.\nD) The recording is obscured by prominent eye movement artifact.",
+            "**B.** The background is characterized by delta activity. "
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. The background consists of high-amplitude, approximately 2.2 Hz delta activity, especially during 1 to 5s. The pattern seems to be drowsing slow activity.",
+        "is_expert_annotated": true
+    },
+    "106_av.npy": {
+        "conversation": [
+            "**User:** What is your conclusion for this segment? Is that non-epileptiform?",
+            "**Agent:** Yes. Based on this 10-second view, the sharp activity is best explained by artifact. The primary finding is the poor data quality due to frequent blinking and muscle tension, which limits a confident assessment of the underlying background rhythm."
+        ],
+        "selection": [
+            "This segment contains numerous sharp transients distributed across multiple channels. What is their most likely cause?\n\nA) Generalized epileptiform discharges\nB) Eye movement artifact\nC) Multifocal spike-and-wave discharges\nD) Muscle artifact",
+            "**B.** The sharp transients are observed to be synchronous with prominent, repetitive vertical eye movements seen in the frontopolar leads, indicating they are blink artifacts rather than true epileptiform activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair due to significant artifact interference. Persistent high-frequency noise is observed, predominantly affecting the bilateral temporal and occipital regions. Numerous eye blink artifacts are present in the frontopolar leads, which are temporally associated with diffuse, artifact-induced sharp waves across bilateral temporal, central, parietal, and occipital areas. The recording is significantly obscured by myogenic and eye movement artifact, confounding clear interpretation of the background or definitive identification of epileptiform activity.",
+        "is_expert_annotated": true
+    },
+    "5_av.npy": {
+        "conversation": [
+            "**User:** What do you think of the sharp activity at approximately 4s. Is it caused by epilepsy?",
+            "**Agent:** No. The sharp transients observed at approximately 4 seconds are temporally and spatially associated with K-complexes and represent their normal sharp-wave component."
+        ],
+        "selection": [
+            "This EEG segment is recorded during sleep. What is the most prominent sleep-related waveform present?\n\nA) K-complexes maximal in the frontal regions.\nB) Rhythmic sleep spindles.\nC) Vertex sharp waves.\nD) Generalized epileptiform discharges.",
+            "**A.** Well-formed K-complexes are observed in 4.1 ~ 4.5 seconds and 7.1 ~ 8.4 seconds, maximal bilaterally over frontal regions."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. Overall data quality is good. This segment of sleep shows well-formed K-complexes in 4.1 ~ 4.5 seconds and 7.1 ~ 8.4 seconds, maximal over the bilateral frontal regions. The background activity is stable, composed of a low-amplitude alpha and theta rhythm. The findings are consistent with stage NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "49_av.npy": {
+        "conversation": [
+            "**User:** Can you give me details on the epileptiform discharges in this segment?",
+            "**Agent:** Certainly. Sharps are observed at around 2s and 5s in the parietal-occipital and left temporal areas. However, they are likely artifactual in origin because they occur simultaneously with eye blink artifacts in the frontopolar region."
+        ],
+        "selection": [
+            "How would you best characterize the epileptiform discharges seen in this EEG segment?\n\nA) They are benign variant seen during sleep.\nB) They are generalized spike-and-wave discharges.\nC) They are focal, originating from the left parietal region.\nD) The sharp transients are likely artifact and not true epileptiform discharges.",
+            "**D.** The sharp waves at around 2s, 5s are temporally coincident with eye blink artifacts in the frontopolar region."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with some interference from high-frequency muscle artifact in the bilateral frontal and temporal regions, as well as intermittent eye blink artifacts. Artifactual sharps are noted at around 2s and 5s in the parietal-occipital and left temporal areas. The background consists of a stable 4-5 Hz theta activity, consistent with a state of drowsiness.",
+        "is_expert_annotated": true
+    },
+    "88_av.npy": {
+        "conversation": [
+            "**User:** Can you give me an overall impression of this 10-second segment?",
+            "**Agent:** Certainly. This segment appears to represent a normal awake state. The most prominent feature is a well-organized posterior dominant rhythm at approximately 9 Hz, which is consistent with relaxed wakefulness with eyes closed. There is some minor muscle artifact, mainly over the frontal regions, but it doesn't obscure the underlying background activity."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature in this 10-second segment?\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Generalized background slowing into the theta range.\nC) Sleep spindles characteristic of NREM2 sleep.\nD) Diffuse muscle artifact that prevents clear interpretation.",
+            "**A.** The segment shows a rhythmic 8-12 Hz activity that is maximal in the posterior leads."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, though some high-frequency muscle artifact is present, primarily in the frontopolar regions and intermittently in the temporal and occipital areas. The background activity is characterized by a well-organized and symmetric 9 Hz posterior dominant alpha rhythm. No definite epileptiform discharges or physiological sleep waves are observed. These findings are consistent with a normal EEG from a subject in a state of relaxed wakefulness.",
+        "is_expert_annotated": true
+    },
+    "15_av.npy": {
+        "conversation": [
+            "**User:** Can you elaborate on the sharp waves around 8s? Are they artifactual in origin?",
+            "**Agent:** Certainly. The sharp transients, noted at roughly 8 seconds, occur at the same time as a burst of high-frequency muscle artifact in the midline region. The morphology is consistent with muscle artifact rather than a true epileptiform discharge. Additionally, there are other electrode artifacts present, particularly in the left occipital and parietal areas, further reducing the reliability of this segment."
+        ],
+        "selection": [
+            "This segment displays sharp transients maximal in the right hemisphere around the 8-second mark. What is their most likely origin?\n\nA) They are a focal cluster of epileptiform discharges.\nB) They are artifact-induced.\nC) They are vertex sharp waves.\nD) They represent the sharp component of K-complexes.",
+            "**B.** The temporal coincidence of this sharp wave with artifacts at F3, FZ and CZ suggests a non-cerebral origin, likely artifactual rather than true epileptiform activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is poor, with some channels affected by localized artifacts and high-frequency noise. Artifactual sharp waves are present in the whole brain except O1, CZ and PZ channels between 5.6 and 6.1 seconds. Following this activity, artifact-induced sharp waves are observed in all channels except F3 and midline regions between 7.8 and 8.2 seconds. The background consists of a stable 5.3 Hz theta rhythm.",
+        "is_expert_annotated": true
+    },
+    "62_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** The most striking feature is a significant artifact in the right occipital region (O2). It's presenting as rhythmic, sharp activity, but this is very likely due to a faulty electrode or poor contact, as it persists throughout the entire segment. Additionally, the background activity shows a transition from a beta rhythm to a delta activity, indiacting a state of sleep."
+        ],
+        "selection": [
+            "The O2 channel displays rhythmic, sharply-contoured transients throughout the recording. What is the most likely interpretation of this finding?\n\nA) Focal periodic epileptiform discharges originating from the right occipital lobe.\nB) Electrode artifact localized to the O2 channel.\nC) Positive Occipital Sharp Transients of Sleep (POSTS).\nD) Benign Occipital Epilepsy of Childhood (Panayiotopoulos syndrome).",
+            "**B.** The activity is confined to a single electrode (O2) and is associated with persistent extreme values, which is highly characteristic of an electrode artifact (e.g., electrode pop or poor contact), not true cerebral activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is compromised by a persistent electrode artifact in the O2 channel throughout the segment. The background activity shows a transition from a beta rhythm in the initial 3 seconds to a subsequent diffuse 2-3 Hz delta activity, consistent with sleep onset. The repetitive sharp and spike activity observed in the O2 channel is considered artifactual due to the poor signal quality in this lead. The findings are consistent with stage NREM2 sleep, though the right occipital region is uninterpretable due to significant artifact.",
+        "is_expert_annotated": true
+    },
+    "184_av.npy": {
+        "conversation": [
+            "**User:** Can you tell me details about that discharge around 5s?",
+            "**Agent:** Certainly. At the 5-second mark, spike waves appeared in the bilateral central regions and the midline between the frontal and central areas. This is considered epileptiform discharge."
+        ],
+        "selection": [
+            "What is the discharge around 5 seconds?\n\nA) Electrode pop.\nB) Sharp.\nC) Eye blink.\nD) Spike.",
+            "**D.** At the 5-second mark, spike waves appeared in the bilateral central regions and the midline between the frontal and central areas."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Spike-and-wave complexes are observed around 2.5 seconds over the midline regions, accompanied by sharp waves in other channels. A distinct burst of spikes is noted bilaterally in the central and midline frontal regions around 5 seconds. Delta activity is observed from 2 to 3.5s and 6 to 9.2s. The presence of sharps, spikes and spike-and-wave complexes indicates an underlying epileptiform process.",
+        "is_expert_annotated": true
+    },
+    "174_av.npy": {
+        "conversation": [
+            "**User:** I see slowing in this segment. Are there any other focal or epileptiform findings? I seem to see some sharp waves.",
+            "**Agent:** No. You may confuse paroxysmal generalized delta activity with sharp waves."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature in this 10-second segment?\n\nA) Excessive eye movement artifact obscuring the background.\nB) A focal sharp wave in the left anterior temporal region.\nC) A well-organized posterior dominant alpha rhythm.\nD) Paroxysmal generalized delta activity.",
+            "**D.** Paroxysmal generalized delta activity can be observed from 2.5s to 7.5s."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The recording contains slow wave mainly from 2.5 to 7.5 second. The background is characterized by diffuse, high-amplitude delta activity at approximately 2-3 Hz, consistent with a state of drowsiness.",
+        "is_expert_annotated": true
+    },
+    "168_av.npy": {
+        "conversation": [
+            "**User:** What is your overall impression of this segment?",
+            "**Agent:** The most prominent feature here is the background activity. It's dominated by generalized, rhythmic delta waves, which become much higher in amplitude and more persistent in the second half of the recording. There are also several sharp transients and sharp-and-slow-wave complexes."
+        ],
+        "selection": [
+            "Which of the following statements is correct?\n\nA) The sharps in the segment are artifacts propagated from the eye movement.\nB) There are no suspected spike-and-slow-wave complexes in the Pz channel.\nC) There are no suspected spike-and-slow-wave complexes in the Pz channel.\nD) The background activity shows an increase in magnitude during this segment.",
+            "**D.** The the amplitude clearly increase from the first five seconds to the last five seconds."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Spike-and-slow-wave complexes are observed at 2s and 4.5s on PZ, The background is characterized by diffuse, high-amplitude delta activity at approximately 1.6 Hz, which is most prominent during the latter half of the segment. The presence of sporadic sharp waves, spikes and spike-and-slow-wave complexes on a slow delta background is suggestive of an underlying epileptic process.",
+        "is_expert_annotated": true
+    },
+    "47_av.npy": {
+        "conversation": [
+            "**User:** What is your initial impression of this 10-second segment?",
+            "**Agent:** My initial impression of this segment is that the background activity is generally slow, composed of delta waves around 2 Hz. Additionally, there is an asymmetry with higher amplitudes over the left posterior temporal region compared to the right. Overall, these features are consistent with stage NREM 3 sleep, although the noted asymmetry is noteworthy."
+        ],
+        "selection": [
+            "What is the most significant finding in this EEG segment?\n\nA) A normal posterior dominant rhythm.\nB) Delta activity, maximal over the left temporal region.\nC) Frequent generalized epileptiform discharges.\nD) The recording is obscured by myogenic artifact.",
+            "**B.** The key finding is the continuous, delta activity with a clear amplitude asymmetry, being higher over the left temporal (T3) than the right temporal (T4) region."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background is characterized by diffuse, medium-amplitude delta activity at approximately 1.4 Hz, consistent with slow-wave sleep. An interhemispheric asymmetry is present, with higher amplitude activity noted over the left temporal region (T3) compared to the right (T4). Overall, the findings are consistent with stage NREM3 sleep with the presence of a left-greater-than-right temporal amplitude asymmetry.",
+        "is_expert_annotated": true
+    },
+    "151_av.npy": {
+        "conversation": [
+            "**User:** Can you give me your initial assessment of this segment?",
+            "**Agent:** Certainly. This appears to be a well-organized, normal awake recording. The most prominent feature is a stable posterior dominant rhythm at approximately 9-10 Hz, which is consistent with a state of relaxed wakefulness with the eyes closed."
+        ],
+        "selection": [
+            "This 10-second EEG segment is best characterized by:\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Generalized theta activity indicating drowsiness.\nC) The presence of sleep spindles.\nD) Excessive muscle artifact rendering the recording uninterpretable.",
+            "**A.** The recording shows a stable background with a rhythm at approximately 9.4 Hz, maximal in the posterior regions, which is characteristic of the alpha rhythm seen in a relaxed, awake state with eyes closed."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with some signal interference from persistent high-frequency muscle artifact in the bilateral frontotemporal regions. No definite epileptiform discharges or physiological sleep waves are observed. The background activity is stable and well-organized, characterized by a symmetric posterior dominant alpha rhythm at approximately 9-10 Hz. These findings are consistent with a normal EEG from a subject in a state of relaxed wakefulness.",
+        "is_expert_annotated": true
+    },
+    "17_av.npy": {
+        "conversation": [
+            "**User:** I see a burst of sharp waves around 5s. Is that epileptiform discharge?",
+            "**Agent:** No, it is not. This is an artifactual sharp wave. A genuine sharp wave would not exhibit such high amplitude."
+        ],
+        "selection": [
+            "This EEG segment is significantly affected by various artifacts. What is the most likely cause of the signal morphology observed in the CZ channel from approximately 6 to 10 seconds?\n\nA) Electrocerebral silence\nB) High-frequency muscle artifact\nC) Poor electrode contact or lead failure\nD) Normal background attenuation during REM sleep",
+            "**C.** The CZ channel displays a sustained low-voltage, flat appearance, which is a classic sign of a technical artifact resulting from poor electrode impedance or a malfunctioning electrode."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair but is significantly impacted by various artifacts. The recording is affected by intermittent high-frequency muscle artifact, particularly in the right temporal and occipital regions, and a prominent period of widespread high-amplitude artifact obscures the majority of channels between approximately 3.8 and 5.9 seconds. Additionally, the CZ and PZ channels show a flat-line artifact from 6.4 to 9.6 seconds, and eye blink artifacts are noted in the frontopolar leads. No definite epileptiform discharges or physiological sleep waves are identified. Overall, the segment is heavily contaminated by artifact, precluding a reliable assessment of the underlying cerebral activity.",
+        "is_expert_annotated": true
+    },
+    "102_av.npy": {
+        "conversation": [
+            "**User:** What's your initial analysis of this 10-second EEG segment?",
+            "**Agent:** This segment shows well-defined features of NREM Stage 2 sleep. The most prominent finding is the presence of clear sleep spindles, particularly visible across the frontal and central regions. The background activity is stable and appears unremarkable."
+        ],
+        "selection": [
+            "This sleep recording demonstrates several characteristic waveforms. Which of the following is the most definitive feature for classifying the sleep stage?\n\nA) Sleep spindles\nB) Focal epileptiform discharges\nC) High-amplitude delta activity of NREM3\nD) Persistent eye movement artifact",
+            "**A.** The segment clearly shows sleep spindles, which are the hallmark of NREM stage 2 sleep. The other findings are either less prominent, artifactual, or not present."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The recording displays features characteristic of sleep, including well-formed sleep spindles at 0-0.8s and 1.8-3.5s, which are most prominent over the bilateral frontal and right central and temporal regions. The background consists of stable, low-amplitude delta activity. Overall, the findings are consistent with stage NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "58_av.npy": {
+        "conversation": [
+            "**User:** Give me an overall description of this segment.",
+            "**Agent:** This segment is severely contaminated with artifact, making a definitive interpretation challenging. The recording is obscured by persistent high-frequency muscle artifact across most channels, combined with frequent, repetitive eye blink artifacts."
+        ],
+        "selection": [
+            "This 10-second epoch is most accurately characterized by which of the following?\n\nA) Pervasive muscle and eye movement artifact, which significantly obscures the background activity.\nB) Generalized spike-and-wave discharges.\nC) Normal NREM stage 2 sleep, including K-complexes and sleep spindles.\nD) A well-organized posterior dominant alpha rhythm.",
+            "**A.** The recording is obscured by extensive high-frequency muscle artifact and frequent eye blinks, making a reliable interpretation of the underlying cerebral rhythms impossible."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, and the signal is severely contaminated by multiple artifacts. Persistent high-frequency muscle artifact is observed bilaterally across the temporal, central, parietal, and occipital regions. Frequent eye blink and lateral eye movement artifacts are also present, which generate artifactual sharp waves in the posterior derivations. No definite epileptiform discharges or physiological sleep waves can be identified due to the pervasive artifact contamination.",
+        "is_expert_annotated": true
+    },
+    "153_av.npy": {
+        "conversation": [
+            "**User:** Can you characterize the discharge around 5s for me?",
+            "**Agent:** Certainly. It's a short, generalized discharge lasting less than a second. It appears to be composed of spike-waves, seen most clearly in the left frontotemporal channels, along with some sharp waves in the right frontal region, making it a bilateral and somewhat asymmetric event."
+        ],
+        "selection": [
+            "This segment contains a well-organized background rhythm interrupted by a brief, salient event. What is the most accurate electrographic description of this event?\n\nA) A sporadic burst of bifrontal and left-sided sharp and spike waves.\nB) A continuous, well-organized 8.7 Hz alpha rhythm.\nC) Focal spikes isolated to the left central region.\nD) Generalized muscle artifact obscuring the recording.",
+            "**A.** The recording shows a brief, bisynchronous discharge of sharp and spike waves around the 5-second mark, with a field involving the bilateral frontal and left central and temporal regions."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, with minor, intermittent high-frequency artifact noted. A brief cluster of sporadic sharps and spikes is present in the bilateral frontal, temporal, and central regions between 5.2 and 5.6 seconds. The background activity is stable and predominantly composed of a medium-amplitude 8.7 Hz alpha rhythm, with intermittent runs of 1.3 Hz delta activity observed in the frontal and temporal areas. The key finding in this segment is the presence of bisynchronous epileptiform discharges.",
+        "is_expert_annotated": true
+    },
+    "28_av.npy": {
+        "conversation": [
+            "**User:** Can you give me an impression of this 10-second segment?",
+            "**Agent:** Certainly. The primary issue with this segment is the very poor data quality. The recording is severely contaminated by widespread, high-frequency muscle artifact, making reliable interpretation not feasible."
+        ],
+        "selection": [
+            "This 10-second segment is significantly obscured by artifact. What is the most prominent and widespread type of artifact present?\n\nA) Repetitive eye blink artifact.\nB) Widespread muscle artifact.\nC) Single-channel electrode artifact.\nD) 60 Hz line noise.",
+            "**B.** The recording is contaminated by persistent, high-frequency activity across nearly all channels, which is characteristic of muscle artifact and severely limits interpretation. While other artifacts are present, this is the most diffuse and prominent."
+        ],
+        "summary": "The channel layout follows the standard 10-20 system, utilizing an average reference. The data quality is poor, with the recording being severely contaminated by artifacts. Persistent high-frequency muscle artifact is observed across most channels. Additionally, frequent eye blink artifacts are present in the frontopolar leads. Due to the pervasive nature of these artifacts, the underlying background activity cannot be assessed.",
+        "is_expert_annotated": true
+    },
+    "149_av.npy": {
+        "conversation": [
+            "**User:** Can you give me details on the sharp waves in this segment?",
+            "**Agent:** Of course. At 0.5s, 2s, 4s, 5.5s, and 7.5s, spike-and-wave complexes are observed at PZ, sharp waves appeare at C3, P3, and O1, while positive deflections occurr at FP2, F4, F8, and T4, forming a dipole."
+        ],
+        "selection": [
+            "What best describes the EEG?\n\nA) Left-right dipoles\nB) Eye blink artifact\nC) Sharp waves across all channels\nD) Benign rolandic spikes",
+            "**A.** Sharp waves are observed on C3, P3, O1, and positive transients are on FP2, F4, F8, T4."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. At 0.5s, 2s, 4s, 5.5s, and 7.5s, spike-and-wave complexes are observed at PZ, sharp waves appeare at C3, P3, and O1, while positive deflections occurr at FP2, F4, F8, and T4, forming a dipole. From 9 to 10 seconds, the frequency decreased to the delta range with an accompanying increase in amplitude.",
+        "is_expert_annotated": true
+    },
+    "71_av.npy": {
+        "conversation": [
+            "**User:** I note some sharp waves in the posterior frontal region. Could those be epileptiform?",
+            "**Agent:** It's unlikely. The sharp waves noted in the posterior channels are synchronous with the eye blink artifact seen frontally, which is characteristic of blink-induced artifact."
+        ],
+        "selection": [
+            "What is the most significant finding in this EEG segment?\n\nA) Bilateral independent posterior-dominant sharp waves.\nB) Positive occipital sharp transients of sleep.\nC) Widespread muscle artifact obscuring the background.\nD) A well-formed posterior dominant alpha rhythm.",
+            "**C.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, and the signal is severely contaminated by artifacts. Persistent, diffuse high-frequency noise obscures the recording across all channels. Frequent eye blink artifacts are present, originating in the frontopolar leads and propagating posteriorly, resulting in artifact-induced sharp waves in the bilateral temporal, parietal, and occipital regions. Due to the pervasive artifact, the underlying background activity cannot be reliably assessed. The segment is of limited diagnostic value, and no definitive epileptiform discharges can be identified.",
+        "is_expert_annotated": true
+    },
+    "171_av.npy": {
+        "conversation": [
+            "**User:** Can you characterize that delta activity in this segment for me?",
+            "**Agent:** Certainly. It's a rhythmic delta pattern, running at approximately 2-3 Hz, present across all channels. There is also a subtle but consistent interhemispheric asymmetry, with amplitudes appearing slightly higher over the right hemisphere."
+        ],
+        "selection": [
+            "What is the most significant feature of the background activity in this EEG segment?\n\nA) A well-organized posterior dominant alpha rhythm.\nB) Diffuse polymorphic delta activity.\nC) Focal right temporal sharp waves.\nD) The background is obscured by widespread artifact.",
+            "**B.** The segment displays a continuous, slow background predominantly in the delta frequency range, which seems to be in NERM sleep stage 3."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background is characterized by diffuse, medium-amplitude delta activity at approximately 2-3 Hz, with an interhemispheric asymmetry showing consistently higher amplitudes over the right frontopolar and parietal regions compared to the left. The segment is likely recorded during NREM Stage 3 sleep. No definite epileptiform discharges are observed.",
+        "is_expert_annotated": true
+    },
+    "32_av.npy": {
+        "conversation": [
+            "**User:** What do you think of this segment?",
+            "**Agent:** This segment is notable for a clear focal abnormality in the left hemisphere. I'm observing two distinct features: intermittent focal slowing and periodic epileptiform discharges. There is some persistent high-frequency artifact, but it appears confined to the right hemisphere and does not obscure these primary findings."
+        ],
+        "selection": [
+            "What is the most significant electrographic feature in this segment?\n\nA) Generalized spike-and-wave discharges.\nB) Right hemisphere artifact obscuring the background.\nC) Focal epileptiform discharges in the left hemisphere.\nD) A normal, well-regulated posterior dominant alpha rhythm.",
+            "**C.** The segment shows periodic spikes and sharps localized to the left hemisphere, accompanied by focal slowing in the left temporal region. This combination represents the most clinically significant finding."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though persistent high-frequency artifact is noted over the right frontotemporal region, particularly in channels FP2, F8, T4 and T6. Periodic spikes and sharps are present over the left hemisphere, specifically in the temporal (T5), and frontal (FP1, F3, F7) regions. This is accompanied by the emergence of focal 1.9 Hz delta activity in the left temporal region (T3, T5) during the latter half of the segment. The background shows an beta rhythm in most channels and delta activity in left temporal region. Also, there is a persistent amplitude asymmetry (L > R) over the frontal regions, greatest at F3 compared to F4.. The combination of left-sided sporadic spikes and focal polymorphic delta activity is suggestive of an underlying focal cortical dysfunction.",
+        "is_expert_annotated": true
+    },
+    "25_av.npy": {
+        "conversation": [
+            "**User:** Can you describe the artifacts in this segment specificly? Is there any interpretable activity at all?",
+            "**Agent:** Certainly. There is persistent, high-frequency muscle artifact across most channels. Additionally, several channels in the left hemisphere, particularly T3, C3, and P3, show signs of poor electrode contact or movement, resulting in intermittent signal loss. While there are frequent eye blinks indicating wakefulness, the density of these artifacts makes it impossible to reliably evaluate the background rhythm."
+        ],
+        "selection": [
+            "What is the primary limiting factor for interpreting this EEG segment?\n\nA) Severe and widespread artifact\nB) Focal slowing over the left central region\nC) A well-organized 9 Hz posterior dominant rhythm\nD) Generalized epileptiform discharges",
+            "**A.** The recording is obscured by extensive high-frequency muscle artifact, frequent eye blinks, and electrode-specific noise, which severely compromise the ability to assess the underlying cerebral activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, and the recording is severely contaminated by widespread artifacts. This includes persistent high-frequency noise across bilateral frontal, temporal, and occipital regions, frequent eye blink artifacts in the frontopolar leads, and significant electrode artifact affecting channels such as T3, C3, and P3. Due to the pervasive artifacts, no definite epileptiform discharges or physiological sleep waves can be reliably identified.",
+        "is_expert_annotated": true
+    },
+    "21_av.npy": {
+        "conversation": [
+            "**User:** What's your analysis of this segment?",
+            "**Agent:** This appears to be a normal awake recording. The dominant feature is a well-organized posterior dominant rhythm at approximately 11 Hz, which is consistent with a state of relaxed wakefulness with eyes closed. There is some persistent high-frequency artifact localized to the right temporal region, but it doesn't obscure the overall interpretation."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature seen in this 10-second segment?\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Generalized background slowing.\nC) Sleep spindles and K-complexes.\nD) Widespread muscle artifact obscuring interpretation.",
+            "**A.** The EEG shows a well-organized rhythm at approximately 11 Hz in the posterior and occipital channels, which is characteristic of the alpha rhythm seen in a relaxed, awake state with eyes closed."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though persistent high-frequency artifact is noted over the right temporal region. Well-organized alpha rhythm are observed in occipital regions. The background activity is characterized by a stable and well-organized posterior dominant alpha rhythm at approximately 11 Hz, with superimposed low-amplitude beta activity. These findings are consistent with a normal state of relaxed wakefulness.",
+        "is_expert_annotated": true
+    },
+    "40_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This appears to be a normal segment of awake EEG. I'm seeing a well-organized posterior dominant rhythm at approximately 9-10 Hz, which is consistent with relaxed wakefulness with the eyes likely closed. The frequent eye blinks seen in the frontal leads also fit with this state."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature in this EEG segment?\n\nA) The recording is obscured by pervasive muscle artifact, precluding interpretation.\nB) Stage N1 sleep with vertex sharp waves.\nC) Generalized slowing suggestive of encephalopathy.\nD) A well-organized alpha rhythm consistent with relaxed wakefulness.",
+            "**D.** The recording shows a clear, rhythmic 8-12 Hz activity in all channels."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, though the recording is significantly affected by various artifacts. Frequent eye blink artifacts are present. Persistent high-frequency muscle artifact is noted in the last one second. O2 suffers from severe artifact in the last two seconds. The background consists of alpha activity. These findings are consistent with a relaxed wakefulness.",
+        "is_expert_annotated": true
+    },
+    "177_av.npy": {
+        "conversation": [
+            "**User:** Is the sharp wave at 2.5s an artifact from blinking or an epileptiform discharge?",
+            "**Agent:** I believe it is an epileptiform discharge. Firstly, we can observe sharp waves at C3, P3, and O1, accompanied by a contralateral positive deflection, which indicates a dipole phenomenon. Additionally, spike-and-slow-wave complexes and spike waves are visible at Pz and Cz, further confirming that this is an epileptiform discharge."
+        ],
+        "selection": [
+            "What is the cause of the sharp waves at 2.5s?\n\nA) Eye blinks.\nB) Epileptiform discharge.\nC) Delta activity.\nD) K-complexes.",
+            "**B.** "
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. A sharp wave is observed in the frontal polar channels at 1.5s. At 2.5s, sharp waves are visible at C3, P3, and O1, accompanied by a contralateral positive deflection indicative of a dipole phenomenon. Simultaneously, spike-and-slow-wave complexes and spike waves can be seen at Pz and Cz. Additional sharp waves are observed at C3 and P3 at 4s. The overall background activity consists of medium to high amplitude theta and delta frequencies.",
+        "is_expert_annotated": true
+    },
+    "96_av.npy": {
+        "conversation": [
+            "**User:** What is your initial assessment of this segment?",
+            "**Agent:** This segment displays clear features of NREM stage 2 sleep. There is a well-formed, synchronous sleep spindle visible across the frontocentral regions from approximately 0.5 to 1.8 seconds."
+        ],
+        "selection": [
+            "This EEG segment is recorded during sleep. What is the most characteristic feature present?\n\nA) Rhythmic occipital sharp waves.\nB) Bilaterally synchronous sleep spindles.\nC) Electrodcremental event in the central region.\nD) A well-formed posterior dominant alpha rhythm.",
+            "**B.** The segment clearly shows well-formed, bilaterally synchronous sleep spindles, which are a hallmark of NREM stage 2 sleep."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though the CZ channel is affected by low-voltage artifact during the first five seconds. Bilateral sleep spindles are present across the frontal, temporal, and parietal regions between 0.5 and 1.8 seconds. The background consists of stable, low-amplitude theta activity. The finding is consistent with stage NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "169_av.npy": {
+        "conversation": [
+            "**User:** I think I have seen sharp waves in this segment. Can you give me details on sharp waves in the segment?",
+            "**Agent:** Of course. Actually they are not sharp waves, but part of the delta activity. There is medium-amplitude delta activity on most channels, suggesting that this segment was recorded in deep sleep."
+        ],
+        "selection": [
+            "What does the waveform in the FP region from 2-5 seconds most likely represent?\n\nA) Left hemispheric periodic discharges.\nB) A generalized, rhythmic alpha rhythm.\nC) Frequent eye blink artifacts obscuring the frontal channels.\nD) Slow waves.",
+            "**D.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background activity is stable and predominantly composed of diffuse, medium-amplitude delta activity at approximately 2.5-3.0 Hz. It may be in NREM3.",
+        "is_expert_annotated": true
+    },
+    "82_av.npy": {
+        "conversation": [
+            "**User:** Can you give me details on the background?",
+            "**Agent:** Certainly. For the first 2.5 seconds, there is continuous, medium-amplitude delta activity over the frontal regions. Later in the segment, the frequency changes to theta band and last to 4 second. This pattern continues until the end of the segment."
+        ],
+        "selection": [
+            "What is the most clinically significant finding in this EEG segment?\n\nA) Generalized background slowing.\nB) An isolated sharp wave in the midline parietal region.\nC) Frequent eye blink artifacts obscuring the frontal channels.\nD) Focal slowing with associated epileptiform discharges.",
+            "**A.** The segment demonstrates delta and theta activity in the whole brain. No definite epileptiform discharges or physiological sleep waves are observed."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background is delta activity. Runs of medium-amplitude theta activity occur over the frontal regions (F3, F4, Fz), each lasting approximately 1.5 seconds. These findings are suggestive of focal epileptiform activity or NREM2 stage.",
+        "is_expert_annotated": true
+    },
+    "45_av.npy": {
+        "conversation": [
+            "**User:** Were there any epileptiform discharges noted in the region?",
+            "**Agent:** No. Though there are some waves appear somewhat sharp present in the left temporal area, the sharp morphology of these waveforms is likely due to the high amplitude and they are probably part of the background, not genuine sharp waves."
+        ],
+        "selection": [
+            "What is the primary electrographic abnormality demonstrated in this segment?\n\nA) Generalized background slowing.\nB) Focal slowing in the left temporal region.\nC) Benign epileptiform transients of sleep.\nD) Right hemispheric periodic discharges.",
+            "**B.** The segment shows focal delta activity localized to the left temporal region (T3, T5), indicating a focal cerebral dysfunction."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with some interference from persistent high-frequency noise in the bilateral frontal, temporal, and occipital regions. Focal 1.4 Hz delta activity emerges in the left temporal region (T3, T5) during the latter half of the segment. The background activity consists of a stable, low-amplitude 7 Hz theta rhythm, with a notable interhemispheric asymmetry of higher amplitudes over the left temporal leads compared to the right. The combination of  interhemispheric asymmetry and localized delta activity is suggestive of an underlying focal electrographic abnormality in the left temporal lobe.",
+        "is_expert_annotated": true
+    },
+    "176_av.npy": {
+        "conversation": [
+            "**User:** What happened from 4 to 8s?",
+            "**Agent:** Paroxysmal generalized delta activity."
+        ],
+        "selection": [
+            "What happened from 4 to 8s?\n\nA) Focal frontal epileptiform discharges\nB) Eye blink artifact\nC) Paroxysmal generalized delta activity\nD) Muscle artifact contamination",
+            "**C.**"
+        ],
+        "summary": "The channel layout follows the standard 10-20 system with an average reference. The data quality is good. Paroxysmal generalized delta activity (around 1.5 Hz) is observed from 4 to 8s. It may be the drowsing slow activity.",
+        "is_expert_annotated": true
+    },
+    "142_av.npy": {
+        "conversation": [
+            "**User:** The high frequency noise is really rhythmic. What is it?",
+            "**Agent:** It is the chewing artifact, a very high-frequency, rhythmic, and widespread muscle artifact."
+        ],
+        "selection": [
+            "This segment is characterized by a prominent, widespread pattern of disruption. Which of the following is most likely to be the cause of this pattern?\n\nA) Generalized periodic discharges at approximately 2 Hz.\nB) Eye blink artifact.\nC) A burst-suppression pattern.\nD) Chewing artifact.",
+            "**D.** The EEG shows alternating high-speed activity bursts, which is consistent with chewing artifact."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, as the signal is severely contaminated by widespread high-frequency noise and electrode artifact throughout the recording period. Despite the contamination, periodic sharps at approximately 2.2 Hz are observed bilaterally across the frontal, temporal, central, and parietal regions. However, given the concurrent presence of artifact, these waveforms are most likely artifactual in origin.",
+        "is_expert_annotated": true
+    },
+    "14_av.npy": {
+        "conversation": [
+            "**User:** What do you think of the slowing activity in CZ channel?",
+            "**Agent:** The activity begins around 5 Hz in the first few seconds and then decelerates to approximately 2 Hz for the remainder of the clip. Given the prominent artifact, this activity is most likely artifactual."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature observed in this EEG segmentt?\n\nA) Widespread muscle artifact.\nB) A well-organized 5 Hz posterior dominant rhythm.\nC) Generalized spike-and-wave discharges.\nD) Rhythmic temporal theta of drowsiness.",
+            "**A.** The segment shows widespread muscle artifact, which is the most prominent feature."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with significant interference from high-frequency muscle artifact, particularly in the bilateral frontal and temporal regions. Several channels, especially midline (CZ) are also affected by severe artifact. No definite epileptiform discharges or physiological sleep waves are identified.",
+        "is_expert_annotated": true
+    },
+    "87_av.npy": {
+        "conversation": [
+            "**User:** What is your initial impression of this segment?",
+            "**Agent:** This appears to be a normal awake recording. The key feature is a well-organized posterior dominant rhythm at approximately 9 Hz. This is consistent with a state of relaxed wakefulness, likely with the eyes closed."
+        ],
+        "selection": [
+            "The background activity in this segment is best characterized by which of the following features?\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Diffuse theta and delta activity consistent with drowsiness.\nC) Sleep spindles and K-complexes characteristic of NREM2 sleep.\nD) Pervasive muscle artifact that obscures almost all the underlying background.",
+            "**A.** The recording shows a stable, rhythmic 8-10 Hz activity in the posterior leads, which is the defining characteristic of a normal alpha rhythm in an awake, eyes-closed individual."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with intermittent high-frequency muscle artifact present, primarily affecting the frontotemporal regions. A well-organized posterior dominant alpha rhythm is present at approximately 9 Hz. The findings are consistent with a normal state of relaxed wakefulness with eyes closed.",
+        "is_expert_annotated": true
+    },
+    "7_av.npy": {
+        "conversation": [
+            "**User:** What's your overall impression of this EEG segment?",
+            "**Agent:** This segment shows clear features of sleep. The most notable events are the widespread distributed sleep spindles. The background activity is also consistent NREM2 sleep state."
+        ],
+        "selection": [
+            "What is the most significant event present in the segment?\n\nA) Focal spikes in the left frontotemporal region.\nB) Widely distributed sleep spindles.\nC) Generalized epileptiform discharges.\nD) A run of posterior dominant alpha rhythm.",
+            "**B.** At approximately 2 seconds, sleep spindles are observed with widespread distribution, sparing the midline regions."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though the PZ and CZ channel shows low voltage. Generalized sleep spindles are present from 1.4 to 3.2 seconds, 5.2 to 6.5 seconds and 8.5 to 9.5 seconds. The background activity is within the theta to alpha range. The findings are consistent with stage NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "89_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This appears to be a normal, unremarkable segment from an awake patient. I'm seeing a well-organized posterior dominant rhythm at approximately 10 Hz, which is consistent with a state of relaxed wakefulness with eyes closed."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature in this 10-second segment?\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Diffuse beta activity consistent with drowsiness.\nC) Stage N2 sleep, indicated by sleep spindles.\nD) Generalized background slowing.",
+            "**A.** The EEG shows a stable background with a clear rhythm at approximately 9.9 Hz in the posterior leads."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. The background activity is stable and characterized by a well-organized, medium-amplitude posterior dominant alpha rhythm at approximately 9.5-9.9 Hz. No definite epileptiform discharges or physiological sleep waves are observed. The findings are consistent with a state of relaxed wakefulness with eyes closed.",
+        "is_expert_annotated": true
+    },
+    "97_av.npy": {
+        "conversation": [
+            "**User:** I see some sharp waves at around 4s. Are those of concern?",
+            "**Agent:** That's an important observation. However, the sharp waves are temporally coincident with the K-complexes and represent their constituent sharp components, rather than epileptiform discharges."
+        ],
+        "selection": [
+            "This EEG segment, recorded during sleep, contains several distinct electrographic features. Which of the following best describes the findings?\n\nA) The presence of K-complex and sleep spindles confirms NREM sleep, .\nB) The recording shows focal epileptiform discharges originating from the frontal region, consistent with frontal lobe epilepsy.\nC) The segment is characteristic of REM sleep.\nD) The recording demonstrates a well-formed posterior dominant alpha rhythm, indicating a state of relaxed wakefulness.",
+            "**A.** The segment clearly shows K-complex and sleep spindles, which are characteristic of NREM stage 2 sleep."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. This segment, recorded during sleep, shows sleep spindles at the beginning of the recording and again between 4.6-5.2 seconds in all channels except the midline. A K-complex is observed at 4-5 seconds, maximal in the occipital and frontal regions. The background consists of stable, low-amplitude theta activity. These findings are consistent with NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "75_av.npy": {
+        "conversation": [
+            "**User:** Tell me details about the epileptiform discharges.",
+            "**Agent:** Sporadic sharp and spike waves are observed across all channels and persist throughout the entire recording. This finding is highly suggestive of an underlying epileptic condition."
+        ],
+        "selection": [
+            "What is the most notable finding of this segment?\n\nA) The background consists of a stable, monomorphic 10 Hz alpha rhythm.\nB) There is a persistent amplitude asymmetry in the frontal leads.\nC) The recording is dominated by continuous generalized delta activity.\nD) The segment shows sporadic epileptiform discharges.",
+            "**D.** Sporadic sharps and spikes are present in the whole brain, which is the most significant finding in the segment."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background activity consists of a high-amplitude (~81.5 \u03bcV) rhythm that fluctuates between the alpha (10.5-11.5 Hz) and beta (14.7 Hz) frequency bands. A brief run of delta activity is noted between 1.0 and 2.0 seconds, maximal over the bilateral frontal, temporal, and central regions. Sporadic sharps and spikes are present in the whole brain. These findings are consistent with interictal epileptiform discharges.",
+        "is_expert_annotated": true
+    },
+    "182_av.npy": {
+        "conversation": [
+            "**User:** Can you give me an initial impression of this 10-second segment?",
+            "**Agent:** Certainly. The most striking feature of this segment is the background activity. It is quite slow, dominated by continuous, high-amplitude delta waves at approximately 1.8 Hz. The overall data quality appears good, which allows for a clear analysis."
+        ],
+        "selection": [
+            "The most prominent feature of this EEG segment is:\n\nA) High-amplitude, generalized delta activity.\nB) A focal epileptiform discharge in the right central region.\nC) A normal, well-organized posterior dominant alpha rhythm.\nD) Intermittent, rhythmic theta bursts.",
+            "**A.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background activity is stable and predominantly composed of high-amplitude, diffuse delta activity at approximately 1.8 Hz. If this is during sleep, it could be the EEG pattern of Stage N3 sleep.",
+        "is_expert_annotated": true
+    },
+    "2_av.npy": {
+        "conversation": [
+            "**User:** Can you give me an initial impression of this 10-second segment?",
+            "**Agent:** The background frequency of this image shows significant variations. Beta rhythms (approximately 20Hz) appear between 1.9s and 2.8s, followed by theta rhythms occurring from 3.3s to 5s, and again from 6.9s to 7.5s. At the very beginning of the segment, blink artifacts are possibly present in FP1 and FP2 but have been truncated."
+        ],
+        "selection": [
+            "What best describes the rhythm between 1.9s and 2.8s?\n\nA) Alpha acticity\nB) NREM2 sleep spindles\nC) Beta activity (approximately 20Hz)\nD) High frequency noise",
+            "**C.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. The background frequency of this image shows significant variations. Beta rhythms (approximately 20Hz) appear between 1.9s and 2.8s, followed by theta rhythms occurring from 3.3s to 5s, and again from 6.9s to 7.5s. At the very beginning of the segment, blink artifacts are possibly present in FP1 and FP2 but have been truncated.",
+        "is_expert_annotated": true
+    },
+    "103_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** The data quality of this segment is moderate, partially contaminated by high-frequency noise. The most significant feature is its background composed of low-amplitude 1.7 Hz slow waves."
+        ],
+        "selection": [
+            "The background activity in this segment is best characterized as:\n\nA) Generalized spike-and-wave activity.\nB) Alpha activity.\nC) Delta activity.\nD) Theta activity.",
+            "**C.** The background activity is stable, predominantly composed of low-amplitude Delta band (at approximately 1.7 Hz, amplitude about 21.2 \u03bcV)."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with interference from high-frequency muscle artifact, which is most prominent in the bilateral frontal and temporal regions. The background consists of low-amplitude, diffuse delta activity at approximately 1.7 Hz.",
+        "is_expert_annotated": true
+    },
+    "69_av.npy": {
+        "conversation": [
+            "**User:** What can you tell me about the background rhythm?",
+            "**Agent:** The predominant rhythm is a generalized, medium-amplitude theta activity around 7 Hz. In the absence of any sleep-specific waveforms like spindles or K-complexes, this pattern is highly consistent with a state of drowsiness."
+        ],
+        "selection": [
+            "What is the predominant background activity seen in this 10-second epoch?\n\nA) Normal posterior dominant alpha rhythm\nB) Generalized theta activity\nC) Low-amplitude beta activity\nD) High-amplitude delta waves",
+            "**B.** The background is well-organized and dominated by a monomorphic rhythm at approximately 7 Hz, which is classified as theta activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is good. The background activity is stable and predominantly composed of a medium-amplitude, approximately 7 Hz theta rhythm. No definite epileptiform discharges or physiological sleep waves are observed. These findings are consistent with a state of drowsiness.",
+        "is_expert_annotated": true
+    },
+    "84_av.npy": {
+        "conversation": [
+            "**User:** I see some delta activities. Are those of concern?",
+            "**Agent:** That's an excellent question. I've reviewed their timing, and those delta activities appear to be simultaneously with the eye blink artifacts seen in the frontopolar channels. This pattern is characteristic of blink-induced artifact, where the electrical field from the eye movement projects to the back of the head, mimicking a sharp wave. They don't appear to be true physiological rhythm."
+        ],
+        "selection": [
+            "This segment displays delta activity, particularly in the frontal and temporal regions. What is the most likely origin of these transients?\n\nA) Propagation from eye blink artifacts.\nB) Multifocal independent epileptiform discharges.\nC) Paroxysmal delta activity.\nD) Positive occipital sharp transients of sleep.",
+            "**A.** The sharp transients are simultaneously with large-amplitude eye blinks seen in the frontopolar leads. This temporal correlation is characteristic of blink artifact propagation, not true epileptiform activity."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal being severely contaminated by multiple artifacts. Persistent high-frequency muscle artifact is noted in the bilateral frontal and temporal regions, while the midline channels CZ and PZ show low-voltage, flat activity consistent with poor electrode contact. Frequent blink artifacts are present throughout the recording. Delta activity in the bilateral frontal and temporal regions occur simultaneously with eye blinks, indicating they are artifactual in nature. Due to the overwhelming contamination, the segment is technically unsatisfactory for definitive interpretation.",
+        "is_expert_annotated": true
+    },
+    "37_av.npy": {
+        "conversation": [
+            "**User:** I see artifacts in the segment. Is there any focal slowing or other activity underneath it?",
+            "**Agent:** There is some apparent slow-wave activity in the central channels during the first half of the recording. However, considering it coincides with the severe artifact in C4, it's probable that this is artifactual rather than true physiological delta activity."
+        ],
+        "selection": [
+            "This recording is significantly compromised by artifact. What is the most likely cause of the near-flat, low-voltage activity seen in the central midline (CZ) channel from approximately 4.5 to 7.5 seconds?\n\nA) Focal electrocerebral silence\nB) Poor electrode contact or a faulty electrode\nC) High-frequency muscle artifact\nD) A focal seizure with electrodecremental onset",
+            "**B.** The abrupt and focal flattening of the signal in a single channel is characteristic of an electrode artifact due to poor contact or malfunction, not a physiological brain event."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal severely contaminated by multiple artifact types. The recording is obscured by persistent high-frequency noise across bilateral frontal, temporal, and occipital regions, along with intermittent eyeblink artifacts. Channel-specific artifacts include a period of low-voltage flat activity in CZ and severe artifact in C4. The first four seconds of the recording show moderate-amplitude delta activity at 1.9 Hz. The morphology of this activity demonstrates a clear inverse complementary pattern with the high-amplitude artifact seen at C4. Given the use of an average reference, this delta activity is likely a reference artifact propagated from the C4 electrode. No definite epileptiform discharges or physiological sleep waves are observed, and the interpretation is limited by the poor signal quality.",
+        "is_expert_annotated": true
+    },
+    "105_av.npy": {
+        "conversation": [
+            "**User:** I see the artifacts. Is there anything of potential significance underneath the noise?",
+            "**Agent:** No. The detected sharp waves are clearly temporally coincident with the eye blinks, representing posterior propagation of that artifact."
+        ],
+        "selection": [
+            "What is the most prominent electrographic pattern seen in this 10-second segment?\n\nA) A well-formed posterior dominant alpha rhythm.\nB) Focal sharp waves isolated to the right temporal region.\nC) Periodic generalized discharges with a posterior emphasis.\nD) High-frequency muscle artifact and contonuous blink artifact.",
+            "**D.**  Persistent high-frequency muscle artifact and frequent eye blink artifacts are the dominant feature of this segment."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, as the signal is severely contaminated by artifacts. Persistent high-frequency muscle artifact is observed in the bilateral frontal, temporal, and central regions. Frequent eye blink artifacts induce widespread, synchronous sharp wave transients in the bilateral temporal, parietal, and occipital regions. The recording is significantly obscured by myogenic and eye movement artifact, confounding clear interpretation of the background or definitive identification of epileptiform activity.",
+        "is_expert_annotated": true
+    },
+    "68_av.npy": {
+        "conversation": [
+            "**User:** What is your overall impression of this segment?",
+            "**Agent:** This 10-second segment appears to be within normal limits. The data quality is good, showing a stable and well-organized background rhythm in the high-theta to low-alpha range, at approximately 7.5 Hz."
+        ],
+        "selection": [
+            "How would you best characterize the background activity in this EEG segment?\n\nA) Widespread beta activity.\nB) An alpha rhythm restricted exclusively to the posterior head region.\nC) Disorganized, polymorphic delta activity.\nD) A generalized 7 to 8 Hz rhythm.",
+            "**D.** EEG shows a well-organized generalized 8 Hz alpha to theta background rhythm."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background activity is stable and predominantly composed of medium-amplitude, approximately 7.5 Hz theta activity. No definite epileptiform discharges or physiological sleep waves are observed, with findings consistent with a state of drowsiness.",
+        "is_expert_annotated": true
+    },
+    "59_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This segment is of very poor quality and is largely uninterpretable. It's dominated by widespread, high-amplitude artifact that almost completely obscures the underlying brain activity."
+        ],
+        "selection": [
+            "What is the most accurate description of this 10-second EEG segment?\n\nA) The recording is severely obscured by widespread artifacts, rendering it uninterpretable.\nB) The segment shows a generalized burst of high-amplitude delta activity, concerning for an encephalopathic state.\nC) The segment shows features of NREM stage 1 sleep, including vertex sharp waves.\nD) There is a focal electrode artifact in the left occipital region.",
+            "**A.** The recording is dominated by high-frequency muscle artifact and a large, generalized artifact that saturates the amplifiers, making any underlying cerebral activity impossible to assess."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal being severely contaminated by widespread artifacts that render it largely uninterpretable. The recording is obscured by high-frequency muscle artifact, particularly at the beginning and end of the segment, while the middle portion is dominated by severe, high-amplitude artifacts across most channels. Due to this extensive contamination, the underlying background activity cannot be assessed, and no definite epileptiform discharges or physiological waveforms can be identified.",
+        "is_expert_annotated": true
+    },
+    "172_av.npy": {
+        "conversation": [
+            "**User:** Can you characterize that discharge at 2 seconds for me?",
+            "**Agent:** Certainly. The event is composed of a cluster of spike-and-slow-wave complexes and sharp waves. They are maximally expressed over the left hemisphere and the midline, with positive deflections in the right hemisphere leads. exhibit a dipole-like distribution pattern."
+        ],
+        "selection": [
+            "What is the most accurate characterization of the sporadic discharge seen at approximately 2 seconds?\n\nA) A focal discharge localized to the left hemisphere.\nB) A generalized spike-and-slow-wave complex burst.\nC) An artifactual sharp transient caused by an eye blink.\nD) An independent sharp wave in the right temporal region.",
+            "**A.** The discharge at approximately 2 seconds involves spike-and-slow-wave complexes predominantly over the left hemisphere (F7, T3, T5, C3, P3, O1), consistent with a left-sided focal finding."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The recording shows several distinct, sporadic epileptiform discharges. Between 1.8-2.4 seconds, a spike-and-slow-wave complex is present, with a maximum field in the left temporal, central, parietal, and occipital regions. This phenomenon repeats at 4s. A separate burst of sporadic sharp waves occurs bilaterally in the frontal regions between 6.2-6.8 seconds. The background consists of diffuse, medium-amplitude delta activity. These findings are consistent with sporadic epileptiform discharges occurring on a slow background.",
+        "is_expert_annotated": true
+    },
+    "16_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This segment appears to be from an awake patient and shows a stable, low-amplitude beta rhythm in the background. From a clinical perspective, it's unremarkable. However, the most notable feature is a technical one: the signal is very low in voltage, essentially flat, in the midline channels CZ and PZ, as well as intermittently in C3."
+        ],
+        "selection": [
+            "What is the most significant finding in this EEG segment?\n\nA) Alpha rhythm consistent with eyes-closed wakefulness.\nB) Low voltage in channels C3, CZ, and PZ.\nC) Electrocerebral silence in all channels.\nD) A pattern of generalized periodic discharges.",
+            "**B.** The most prominent feature is the presence of low-voltage, flat-appearing activity in the C3, CZ, and PZ channels, which indicates a technical issue such as poor electrode contact rather than a physiological state."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though low voltage is noted in channels C3, CZ, and PZ. The background activity is stable and predominantly composed of a low-amplitude, approximately 16 Hz beta rhythm. No definite epileptiform discharges or physiological sleep waves are observed in this segment. These findings are consistent with a normal awake state.",
+        "is_expert_annotated": true
+    },
+    "8_av.npy": {
+        "conversation": [
+            "**User:** What's your analysis of this segment?",
+            "**Agent:** This segment appears to show a stable background consistent with an awake state. The predominant activity is a low-amplitude, symmetric beta rhythm around 15-16 Hz. There are some minor technical issues, including persistent high-frequency noise in the FP1 channel, a couple of eye blinks in the frontal leads and some low-voltage activity over the midline, but they don't obscure the overall picture."
+        ],
+        "selection": [
+            "Identify a key feature in this EEG segment that influences its clinical interpretation.\n\nA) A well-organized 10-12 Hz alpha rhythm, consistent with a normal awake state.\nB) Rhythmic eye movement artifact suggestive of drowsiness.\nC) Low voltage in central and parietal midline channels, suggesting a technical issue.\nD) Intermittent generalized background slowing.",
+            "**C.** The most prominent finding is the presence of low-voltage, nearly flat activity in the C3, CZ, and PZ channels, indicative of a technical problem such as poor electrode contact. This compromises the data quality in these regions."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is generally good. Eye blink artifacts are observable at the frontal polar channels at 0.1 seconds. C3, CZ, and PZ exhibit relatively flat curves, potentially due to poor electrode signal quality. The background activity is stable and predominantly composed of a low-amplitude beta rhythm at approximately 16 Hz. No definite epileptiform discharges or physiological sleep waves are observed. The findings are consistent with a normal awake state.",
+        "is_expert_annotated": true
+    },
+    "85_av.npy": {
+        "conversation": [
+            "**User:** Can you specify the types of artifacts you're seeing? Is there any readable activity at all?",
+            "**Agent:** Certainly. There appears to be a combination of high-frequency muscle artifact and large, intermittent baseline swings consistent with electrode pop or movement artifact, particularly prominent in the frontal and central regions. While there is some slow-wave activity noted over the left central-parietal area, its high amplitude and the surrounding artifact make it highly suspect for being non-physiologic."
+        ],
+        "selection": [
+            "What is the most likely cause of the delta activity in the left centroparietal region?\n\nA) High-frequency artifact at the same time.\nB) Seizure activity.\nC) Extreme values from electrode dislodgement.\nD) Normal sleep frequencies.",
+            "**C.** Due to the use of an average reference, this waveform most likely represents an extreme voltage value caused by an electrode dislodgement."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal severely contaminated by extensive high-frequency muscle artifact and periods of extreme values that obscure the underlying activity. The finding of high-amplitude (~103.2 \u03bcV) delta activity at approximately 1.1 Hz over the left central-parietal and midline regions (C3, P3, CZ) is most likely artifactual in origin, given that its timing coincides with that of the known extreme voltage artifact. The segment is of limited diagnostic value due to severe artifact.",
+        "is_expert_annotated": true
+    },
+    "3_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This segment appears to represent a normal, awake state. Frequent eye blink artifacts can be observed in FP1 and FP2, and lateral eye movement artifacts can be observed in F7 and F8."
+        ],
+        "selection": [
+            "What is the most prominent and defining electrographic feature in this 10-second segment?\n\nA) Frequent epileptiform discharges in the frontal regions.\nB) Stage N2 sleep, characterized by sleep spindles and K-complexes.\nC) Diffuse background slowing with intermittent delta activity.\nD) Eye blinks and lateral eye movements.",
+            "**D.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though the recording is contaminated by frequent eye blink artifacts and intermittent high-frequency muscle artifact, primarily in the frontal regions. Lateral eye movements can be observed in F7 and F8. No definite epileptiform discharges or physiological sleep-related waveforms are observed.",
+        "is_expert_annotated": true
+    },
+    "19_av.npy": {
+        "conversation": [
+            "**User:** I note O1 and CZ differ from others. Are they epileptiform discharges?",
+            "**Agent:** Certainly not. They represent severe electrode artifacts, likely caused by poor contact."
+        ],
+        "selection": [
+            "What best describes O1 and CZ?\n\nA) A sustained run of delta activity.\nB) Generalized, synchronous sharp waves.\nC) Severe electrode artifact.\nD) A well-organized posterior dominant rhythm.",
+            "**C.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is fair, with significant artifact interference. Persistent high-frequency noise affects the bilateral frontal and temporal regions, and prominent electrode artifact is noted in the O1 and CZ channels. A generalized burst of sporadic sharp waves is observed from approximately 1.6 to 2.1 seconds. This is followed by high-amplitude delta activity at approximately 1.4 Hz, maximal from 4.0 to 9.0 seconds.",
+        "is_expert_annotated": true
+    },
+    "65_av.npy": {
+        "conversation": [
+            "**User:** I see the high frequency noise. Is there anything of potential interest visible underneath it?",
+            "**Agent:** Despite the noise, there are a couple of isolated, sharp-appearing transients. I can see one over the midline vertex (Cz) and another over the right frontocentral region (F4)."
+        ],
+        "selection": [
+            "The clinical utility of this EEG segment is severely limited. What is the primary reason?\n\nA) Recurrent eyeblink artifacts.\nB) Widespread, high-frequency muscle artifact.\nC) Sporadic epileptiform discharges in the central region.\nD) The presence of a 60 Hz electrical interference.",
+            "**B.** The recording is obscured by persistent, high-frequency artifact consistent with muscle activity across most channels."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal severely contaminated by persistent high-frequency muscle artifact across all channels and frequent eye blink artifacts in the frontopolar leads. Despite poor signal quality, sporadic spikes are noted at CZ (1.7-2.1s) and at F4 (2.5-2.8s).",
+        "is_expert_annotated": true
+    },
+    "43_av.npy": {
+        "conversation": [
+            "**User:** What are your initial thoughts on this segment?",
+            "**Agent:** This appears to be a good quality recording of a patient in sleep. The most prominent features are two well-formed, generalized bursts of sleep spindles, which are characteristic of NREM Stage 2 sleep."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature visible in this segment?\n\nA) Well-formed sleep spindles\nB) A generalized K-complex\nC) Rhythmic epileptiform discharges\nD) Well-organized alpha rhythm",
+            "**A.** The segment shows clear, generalized bursts of activity in the 12-14 Hz range, which are characteristic of sleep spindles, a hallmark of NREM stage 2 sleep."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, though the PZ channel shows persistently low voltage, likely due to a technical issue. Widespread sleep spindles are present from approximately 3.1-4.8 seconds and again from 5.4-7.1 seconds. The background activity is stable and composed predominantly of low-amplitude beta and delta activity. These findings are consistent with stage NREM2 sleep.",
+        "is_expert_annotated": true
+    },
+    "143_av.npy": {
+        "conversation": [
+            "**User:** What are the characteristics of the background in this segment?",
+            "**Agent:** This segment is notable for a continuous delta rhythm across all channels, with a marked asymmetry characterized by right-sided amplitude dominance."
+        ],
+        "selection": [
+            "This EEG segment is primarily characterized by which of the following findings?\n\nA) A well-organized posterior dominant alpha rhythm.\nB) Generalized, continuous delta activity.\nC) Rhythmic spike-and-wave discharges.\nD) Periodic independent sharp waves.",
+            "**B.** The background is diffusely and continuously slow, composed of activity in the delta range, which is the most prominent and clinically significant feature of this recording."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background consists of moderate-amplitude, 2-2.5 Hz delta activity, with a significant right-sided amplitude predominance. The finding of asynchronous, diffusely slow background is indicative of an underlying structural abnormality in the left or right hemisphere.",
+        "is_expert_annotated": true
+    },
+    "180_av.npy": {
+        "conversation": [
+            "**User:** The background looks weird. Can you explain it to me?",
+            "**Agent:** The background activity evolves during the segment, transitioning from low-amplitude 4-5 Hz theta activity in the first four seconds to a more prominent, diffuse, medium-amplitude 1.5 Hz delta rhythm for the remainder of the recording. It may be a signature of falling asleep and entering a deeper stage of sleep."
+        ],
+        "selection": [
+            "What is the most accurate description of the electrographic findings in this segment?\n\nA) A focal epileptic focus in the left frontotemporal region.\nB) Rhythmic generalized spike-and-wave discharges.\nC) Generalized background slowing.\nD) Normal drowsy pattern with vertex sharp waves.",
+            "**C.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The recording is of good quality. The background activity evolves during the segment, transitioning from low-amplitude 4-5 Hz theta activity in the first four seconds to a more prominent, diffuse, medium-amplitude 1.5 Hz delta rhythm for the remainder of the recording. It may be a signature of falling asleep and entering a deeper stage of sleep.",
+        "is_expert_annotated": true
+    },
+    "4_av.npy": {
+        "conversation": [
+            "**User:** What are your thoughts on this segment?",
+            "**Agent:** This is a normal awake EEG. The recording is characterized by a well-organized 10 Hz posterior dominant rhythm, consistent with relaxed wakefulness. Minor, non-obscuring muscle artifact is noted anteriorly."
+        ],
+        "selection": [
+            "What is the primary electrographic feature seen in this 10-second segment?\n\nA) Generalized background slowing consistent with encephalopathy.\nB) A well-organized posterior dominant alpha rhythm.\nC) Sleep spindles and K-complexes characteristic of NREM2 sleep.\nD) Low-voltage, mixed-frequency activity seen during drowsiness.",
+            "**B.** The EEG demonstrates a stable rhythm of approximately 10 Hz that is maximal in the posterior leads, which is characteristic of a relaxed, awake individual with eyes closed."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. Blink artifacts can be observed at FP1 and FP2 at 1 second. The background is characterized by a well-organized and symmetric posterior dominant alpha rhythm at approximately 10-12 Hz. The findings are consistent with a normal EEG in a state of relaxed wakefulness.",
+        "is_expert_annotated": true
+    },
+    "6_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This segment is severely obscured by various artifact, which makes a reliable interpretation of the underlying brain activity very challenging. The periodic high-frequency noise suggests it is chewing artifact."
+        ],
+        "selection": [
+            "What is the primary factor limiting the interpretation of this EEG segment?\n\nA) Persistent artifact-induced sharp waves mimicking epileptiform activity.\nB) Low voltage in the midline channels.\nC) Widespread muscle artifact.\nD) Intermittent eyeblink artifact.",
+            "**C.** The recording is severely degraded by high-frequency muscle artifact across all channels, which can be chewing artifacts."
+        ],
+        "summary": "The channel layout follows the standard 10-20 system, utilizing an average reference. The data quality is poor, as the signal is severely contaminated by artifacts. Persistent high-frequency noise is observed across the entire brain, and the F7 and F8 channels are further obscured by continuous extreme values consistent with electrode artifact. Periodic artifacts suggest chewing artifact. Intermittent eye blink artifacts are also present in the frontopolar leads. Due to the pervasive nature of these artifacts, the underlying background activity cannot be reliably assessed, and no definite epileptiform discharges or physiological sleep waves are identified.",
+        "is_expert_annotated": true
+    },
+    "167_av.npy": {
+        "conversation": [
+            "**User:** I see the slowing. Are there anything worth mentioning about the background?",
+            "**Agent:** Yes, there are. Based on this slow background, I can identify notable interhemispheric asymmetry observed across homologous regions. The right hemisphere consistently shows higher amplitude activity compared to the left."
+        ],
+        "selection": [
+            "The most prominent feature of the background activity in this segment is:\n\nA) Continuous, high-amplitude generalized delta activity.\nB) A well-organized posterior dominant alpha rhythm.\nC) Sporadic right-sided sharp waves.\nD) Sleep spindles and K-complexes.",
+            "**A.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background is characterized by stable, high-amplitude, diffuse delta activity at approximately 1.5 Hz, with notable interhemispheric asymmetry observed across homologous regions. The right hemisphere consistently shows higher amplitude activity compared to the left. It seems to be NREM3.",
+        "is_expert_annotated": true
+    },
+    "141_av.npy": {
+        "conversation": [
+            "**User:** I see the noise. Are there any sharp waves or potential discharges underneath it all?",
+            "**Agent:** There are several sharp-appearing transients noted. However, a prominent cluster of these around 6.5 seconds occurs simultaneously with a large eye movement artifact, making them highly likely to be artifact-induced rather than true epileptiform discharges."
+        ],
+        "selection": [
+            "Sharp transients are noted in the posterior regions. What is the most accurate interpretation of these posterior transients?\n\nA) They represent a blink artifact with posterior propagation.\nB) They are indicative of focal posterior cortical irritability.\nC) They are Positive Occipital Sharp Transients of Sleep (POSTS).\nD) They are myogenic artifacts from scalp muscle tension.",
+            "**A.** The sharp transients in the posterior channels are time-locked with large-amplitude eye blink artifacts in the frontopolar leads (FP1/FP2), indicating they are propagated artifacts rather than true epileptiform discharges."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal being severely contaminated by widespread, high-frequency muscle artifact throughout the recording. Several eye blink artifacts are present, causing diffuse, artifact-induced sharp waves across the temporal, parietal, and occipital regions. Due to the pervasive artifact, the clinical significance of these latter sharp waves is uncertain and difficult to determine.",
+        "is_expert_annotated": true
+    },
+    "26_av.npy": {
+        "conversation": [
+            "**User:** I see the noise, but there's a generalized burst of sharp activity around the 7-second mark. Could that be a genuine discharge?",
+            "**Agent:** That's a key point to address. While there is a widespread sharp transient visible around 7 seconds, it occurs at the exact same time as a severe artifact originating from the left parietal region (P3). This pattern most likely represents an artifact from a single electrode, propagating across all channels due to the average reference, rather than genuine cerebral activity."
+        ],
+        "selection": [
+            "What best describes P3 from 3s to 8s?\n\nA) Severe artifact likely due to poor electrode contact.\nB) Epileptiform discharge.\nC) Severe muscle artifact.\nD) Sharp waves related to eye movement artifact.",
+            "**A.**"
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal being severely contaminated by widespread artifacts. Persistent high-frequency muscle artifact is present across most channels, along with periods of channel dropout and extreme values, particularly in the left fronto-parietal and central regions. Sporadic sharp transients are noted, including an event in the left temporal region around 4 seconds and a generalized burst from 6.7 to 7.5 seconds; however, these events occur concurrently with significant artifact, making their interpretation as true epileptiform discharges unreliable. Due to the pervasive artifact, the recording is of limited diagnostic value.",
+        "is_expert_annotated": true
+    },
+    "94_av.npy": {
+        "conversation": [
+            "**User:** Can you give me details on those spike bursts in the segment?",
+            "**Agent:** Certainly. The first burst occurs at approximately 2.3 seconds and the second follows around 3.6 seconds. The discharges are widespread and appear synchronously across both hemispheres, involving the frontal, temporal, and posterior regions."
+        ],
+        "selection": [
+            "Which kind of epileptiform activity seen in second 0.7, 2.2, 3.5?\n\nA) Generalized spike discharges.\nB) Focal left temporal spikes.\nC) Multifocal sharp and spike waves.\nD) Rhythmic frontal delta activity with superimposed blink artifact.",
+            "**A.** The segment demonstrates best characterized spikes."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. Overall data quality is good. The segment demonstrates sporadic epileptiform discharges, beginning with spikes in the left temporal region (0.6-1.0s), followed by more generalized spike bursts involving bilateral frontal, temporal, central, parietal, and occipital lobes (2.2-2.6s and 3.5-3.8s). This activity is superimposed on a stable background of diffuse, medium-amplitude delta activity at approximately 1.6-2.5 Hz. These findings are consistent with multifocal and generalized epileptiform discharges on an abnormally slow background.",
+        "is_expert_annotated": true
+    },
+    "163_av.npy": {
+        "conversation": [
+            "**User:** What's your initial assessment of this 10-second segment?",
+            "**Agent:** This segment appears to show drowsing slow activity consistent with drowsiness period. The background is composed of diffuse, medium-amplitude delta activity. The most notable event is the paroxysmal generalized delta activity."
+        ],
+        "selection": [
+            "What is the most prominent electrographic feature present in this segment?\n\nA) Vertex sharp waves characteristic of NREM sleep.\nB) Intermittent rhythmic delta activity.\nC) Right temporal epileptiform discharges.\nD) A well-formed posterior dominant alpha rhythm.",
+            "**B.** The recording shows paroxysmal generalized delta activity, consistent with drowsiness period."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good, with paroxysmal generalized delta activity from 1.5s to 4s and from 6s to 10s. The background is characterized by diffuse, medium-amplitude delta activity. These findings are consistent with a state of drowsiness.",
+        "is_expert_annotated": true
+    },
+    "11_av.npy": {
+        "conversation": [
+            "**User:** Is it a sleep EEG? It seems to have a lot of special waveforms.",
+            "**Agent:** Yes, it is. Sleep spindles can be observed from 0 to 1 seconds and 3 to 4 seconds. Besides, K-complexes can be observed from 6 to 7.5 seconds. All of these indicate that it is in NERM2."
+        ],
+        "selection": [
+            "What sleep stage does this segment correspond to?\n\nA) NREM Stage 1 (N1)\nB) NREM Stage 2 (N2)\nC) NREM Stage 3 (N3)\nD) REM sleep",
+            "**B.** The presence of both K-complexes and sleep spindles are the hallmark electrographic features required to define NREM Stage 2 sleep."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. K-complexes are observed in the bifrontal leads from approximately 6.1 to 7.4 seconds, overlapping with a sleep spindle maximal at the vertex between 6.4 and 7.7 seconds. Additionally, a slight sporadic sharp wave is present in the frontopolar and temporal regions from 8.3 to 8.6 seconds. The background activity is composed of mixed theta and alpha frequencies. These findings are consistent with stage NREM2 sleep, containing a focal sharp wave.",
+        "is_expert_annotated": true
+    },
+    "121_av.npy": {
+        "conversation": [
+            "**User:** What's your assessment of this segment?",
+            "**Agent:** This segment appears to show a transition in data quality. The first four seconds display a well-organized posterior dominant rhythm at approximately 10 Hz, which is consistent with a state of relaxed wakefulness. However, after that point, the quality degrades significantly, with the remainder of the recording heavily obscured by muscle and electrode artifact."
+        ],
+        "selection": [
+            "Based on the background rhythm present in the first four seconds of the recording, what is the patient's most likely state?\n\nA) NREM Stage 2 sleep\nB) Drowsiness with alpha dropout\nC) Relaxed wakefulness with eyes closed\nD) REM sleep",
+            "**C.** The segment begins with a well-organized posterior dominant alpha rhythm around 10 Hz, which is the characteristic finding for a state of relaxed wakefulness with eyes closed."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal being severely contaminated by artifacts. Persistent high-frequency muscle artifact is observed across bilateral frontal, temporal, and occipital regions from 4-10 seconds, and the 5-6 second portion of the recording is compromised by significant artifact in the frontopolar leads. During the first four seconds, a medium-amplitude, approximately 10 Hz posterior dominant alpha rhythm is present. No definite epileptiform discharges are identified. The findings, though limited by artifact, are consistent with an awake, eyes-closed state.",
+        "is_expert_annotated": true
+    },
+    "134_av.npy": {
+        "conversation": [
+            "**User:** What is your overall impression of this EEG segment?",
+            "**Agent:** This appears to be a technically clean recording. The most prominent feature is a stable, continuous background composed of low-amplitude, 2.0 Hz delta activity. There are no clear epileptiform discharges or sleep-specific waveforms visible in this view."
+        ],
+        "selection": [
+            "How would you best characterize the background activity in this segment?\n\nA) Generalized rhythmic delta activity and small-amplitude waveform.\nB) A well-formed posterior dominant alpha rhythm.\nC) NREM stage 2 sleep with sleep spindles.\nD) Widespread muscle artifact obscuring the background.",
+            "**A.** The EEG shows a stable background rhythm at approximately 2 Hz, which falls within the delta frequency band, while the amplitude is small, without clear epileptiform or sleep-related features."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The overall data quality is good. The background activity is stable and predominantly composed of low-amplitude delta activity at approximately 2.0 Hz. This recording demonstrates a stable, non-specific slow background without any clear focal or epileptiform features.",
+        "is_expert_annotated": true
+    },
+    "18_av.npy": {
+        "conversation": [
+            "**User:** I see the artifact. Is there anything that can be interpreted through the noise?",
+            "**Agent:** No. The artifact is quite pervasive, making a reliable interpretation very challenging. Some channels, particularly in the left posterior and left occipital regions, are intermittently unreadable due to severe artifact. While there's isolated sharp transients noted at the beginning and middle of the segment, they occur simultaneously with the onset of severe artifact and is almost certainly an artifact rather than a true epileptiform discharge."
+        ],
+        "selection": [
+            "This EEG segment is of poor technical quality. What is the most prominent artifact obscuring the background activity?\n\nA) Widespread muscle artifact\nB) Repetitive eye blink artifact\nC) Focal electrode pop in the occipital region\nD) Generalized spike-and-wave discharges",
+            "**A.** The recording is obscured by high-frequency activity consistent with muscle artifact across most channels, rendering the underlying cerebral activity difficult to assess. While other artifacts like eye blinks are present, the muscle artifact is the most pervasive issue."
+        ],
+        "summary": "The channel layout uses the standard 10-20 system with an average reference. The data quality is poor, with the signal being severely contaminated by artifacts. Persistent high-frequency muscle artifact is observed across bilateral frontal, temporal, and central regions, with additional severe channel-specific artifacts noted in the left parietal and occipital leads. Due to the pervasive artifacts obscuring the underlying cerebral activity, this segment is of limited diagnostic value.",
+        "is_expert_annotated": true
+    }
+}
